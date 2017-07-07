@@ -41,6 +41,24 @@ jobs:
       - deploy:
           name: Push alpine:3.6-dev
           command: docker push krmcbride/alpine:3.6-dev
+  node_boron_dev:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: 
+          name: docker login
+          command: docker login -u ${docker_username} -p ${docker_password}
+      - run: 
+          name: Pull node:boron-dev
+          command: docker pull krmcbride/node:boron-dev
+      - run: 
+          name: Build node:boron-dev
+          working_directory: ./node/boron-dev
+          command: docker build --cache-from krmcbride/node:boron-dev -t krmcbride/node:boron-dev .
+      - deploy:
+          name: Push node:boron-dev
+          command: docker push krmcbride/node:boron-dev
 
 workflows:
   version: 2
@@ -50,3 +68,6 @@ workflows:
       - alpine_dev:
           requires:
             - alpine_base
+      - node_boron_dev:
+          requires:
+            - alpine_dev:
