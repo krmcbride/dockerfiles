@@ -1,0 +1,33 @@
+defaults: &defaults
+  working_directory: /usr/src/app
+  docker:
+    - image: 'krmcbride/docker:17.03-ci'
+  steps:
+    - checkout
+    - setup_remote_docker
+
+version: 2
+jobs:
+  alpine_base:
+    <<: *defaults
+    steps:
+      - run: 
+          name: Build alpine:3.6-base
+          working_directory: ./alpine/3.6-base
+          command: docker build -t krmcbride/alpine:3.6-base .
+  alpine_dev:
+    <<: *defaults
+    steps:
+      - run: 
+          name: Build alpine:3.6-dev
+          working_directory: ./alpine/3.6-dev
+          command: docker build -t krmcbride/alpine:3.6-dev .
+
+workflows:
+  version: 2
+  build_dockerfiles:
+    jobs:
+      - alpine_base
+      - alpine_dev:
+          requires:
+            - alpine_base
