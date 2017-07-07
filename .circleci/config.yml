@@ -3,26 +3,37 @@ defaults: &defaults
   docker:
     - image: 'krmcbride/docker:17.03-ci'
 
+shared_steps: &shared_steps
+  - checkout
+  - setup_remote_docker
+  - run: 
+      name: docker login
+      command: docker login -u ${docker_username} -p ${docker_password}
+
 version: 2
 jobs:
   alpine_base:
     <<: *defaults
     steps:
-      - checkout
-      - setup_remote_docker
+      <<: *shared_steps
       - run: 
           name: Build alpine:3.6-base
           working_directory: ./alpine/3.6-base
           command: docker build -t krmcbride/alpine:3.6-base .
+      - deploy:
+          name: Push the image
+          command: docker push krmcbride/alpine:3.6-base
   alpine_dev:
     <<: *defaults
     steps:
-      - checkout
-      - setup_remote_docker
+      <<: *shared_steps
       - run: 
           name: Build alpine:3.6-dev
           working_directory: ./alpine/3.6-dev
           command: docker build -t krmcbride/alpine:3.6-dev .
+      - deploy:
+          name: Push the image
+          command: docker push krmcbride/alpine:3.6-dev
 
 workflows:
   version: 2
