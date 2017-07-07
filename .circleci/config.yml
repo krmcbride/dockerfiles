@@ -15,7 +15,7 @@ jobs:
           command: docker login -u ${docker_username} -p ${docker_password}
       - run: 
           name: Pull alpine:3.6-base
-          command: docker pull krmcbride/alpine:3.6-base
+          command: docker pull krmcbride/alpine:3.6-base || true
       - run: 
           name: Build alpine:3.6-base
           working_directory: ./alpine/3.6-base
@@ -33,7 +33,7 @@ jobs:
           command: docker login -u ${docker_username} -p ${docker_password}
       - run: 
           name: Pull alpine:3.6-dev
-          command: docker pull krmcbride/alpine:3.6-dev
+          command: docker pull krmcbride/alpine:3.6-dev || true
       - run: 
           name: Build alpine:3.6-dev
           working_directory: ./alpine/3.6-dev
@@ -51,7 +51,7 @@ jobs:
           command: docker login -u ${docker_username} -p ${docker_password}
       - run: 
           name: Pull node:boron-dev
-          command: docker pull krmcbride/node:boron-dev
+          command: docker pull krmcbride/node:boron-dev || true
       - run: 
           name: Build node:boron-dev
           working_directory: ./node/boron-dev
@@ -70,4 +70,4 @@ workflows:
             - alpine_base
       - node_boron_dev:
           requires:
-            - alpine_dev:
+            - alpine_dev
