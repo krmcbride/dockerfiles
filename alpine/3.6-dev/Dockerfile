@@ -6,7 +6,8 @@ RUN apk add --no-cache \
     git \
     openssh-client \
     vim \
-    ctags
+    ctags \
+    ncurses
 
 COPY diff-* /usr/bin/
 ENV VIMRC_VERSION 391f8b5c0680becede604ca84a60ed57f56e42bd
@@ -20,7 +21,3 @@ COPY my_configs.vim /usr/local/vim_runtime/
 COPY *.aliases.bash $BASH_IT/aliases/enabled/
 COPY *.completion.bash $BASH_IT/completion/enabled/
 COPY .bashrc .vimrc .gitconfig /root/
-
-# custom aliases?
-#
-# entrypoint?
