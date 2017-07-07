@@ -1,0 +1,29 @@
+[core]
+    quotepath = false
+    #excludesfile = ~/.gitexcludes
+    editor = vim
+    autocrlf = input
+    pager = diff-so-fancy | less --tabs=4 -RFX
+[color]
+    ui = true
+[format]
+    pretty = %C(bold cyan)%h%Creset %s %C(dim yellow)<%an>%Creset %C(dim green)(%cr)%Creset
+[push]
+    default = simple
+[mergetool]
+    keepBackup = true
+[alias]
+    latest = for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short) - %(committerdate:relative) by <%(authorname)>'
+    tags = for-each-ref --sort=-taggerdate refs/tags --format='%(refname:short) - %(taggerdate:relative) by <%(taggername)>'
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    logr = log --format='%C(bold cyan)%h%Creset %s%C(magenta)%d%Creset %C(dim yellow)<%an>%Creset %C(dim green)(%cr)%Creset'
+[filter "media"]
+    required = true
+    clean = git media clean %f
+    smudge = git media smudge %f
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
