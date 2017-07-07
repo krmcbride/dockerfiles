@@ -14,11 +14,14 @@ jobs:
           name: docker login
           command: docker login -u ${docker_username} -p ${docker_password}
       - run: 
+          name: Pull alpine:3.6-base
+          command: docker pull krmcbride/alpine:3.6-base
+      - run: 
           name: Build alpine:3.6-base
           working_directory: ./alpine/3.6-base
-          command: docker build -t krmcbride/alpine:3.6-base .
+          command: docker build --cache-from krmcbride/alpine:3.6-base -t krmcbride/alpine:3.6-base .
       - deploy:
-          name: Push the image
+          name: Push alpine:3.6-base
           command: docker push krmcbride/alpine:3.6-base
   alpine_dev:
     <<: *defaults
@@ -29,11 +32,14 @@ jobs:
           name: docker login
           command: docker login -u ${docker_username} -p ${docker_password}
       - run: 
+          name: Pull alpine:3.6-dev
+          command: docker pull krmcbride/alpine:3.6-dev
+      - run: 
           name: Build alpine:3.6-dev
           working_directory: ./alpine/3.6-dev
-          command: docker build -t krmcbride/alpine:3.6-dev .
+          command: docker build --cache-from krmcbride/alpine:3.6-dev -t krmcbride/alpine:3.6-dev .
       - deploy:
-          name: Push the image
+          name: Push alpine:3.6-dev
           command: docker push krmcbride/alpine:3.6-dev
 
 workflows:
