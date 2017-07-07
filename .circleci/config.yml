@@ -59,6 +59,27 @@ jobs:
       - deploy:
           name: Push node:boron-dev
           command: docker push krmcbride/node:boron-dev
+  openjdk_8_dev:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: 
+          name: docker login
+          command: docker login -u ${docker_username} -p ${docker_password}
+      - run: 
+          name: Pull openjdk:8-dev
+          command: docker pull krmcbride/openjdk:8-dev || true
+      - run: 
+          name: Build openjdk:8-dev
+          working_directory: ./openjdk/8-dev
+          command: docker build --cache-from krmcbride/openjdk:8-dev -t krmcbride/openjdk:8-dev -t krmcbride/java:8-dev .
+      - deploy:
+          name: Push openjdk:8-dev
+          command: docker push krmcbride/openjdk:8-dev
+      - deploy:
+          name: Push java:8-dev
+          command: docker push krmcbride/java:8-dev
 
 workflows:
   version: 2
@@ -69,5 +90,8 @@ workflows:
           requires:
             - alpine_base
       - node_boron_dev:
+          requires:
+            - alpine_dev
+      - openjdk_8_dev:
           requires:
             - alpine_dev
