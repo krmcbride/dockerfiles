@@ -2,84 +2,48 @@ defaults: &defaults
   working_directory: /usr/src/app
   docker:
     - image: 'krmcbride/docker:17.03-ci'
+  steps:
+    - checkout
+    - setup_remote_docker
+    - run: 
+        name: docker login
+        command: docker login -u ${docker_username} -p ${docker_password}
+    - run: 
+        name: Pull $image
+        command: docker pull $image || true
+    - run: 
+        name: Build $image
+        command: docker build --cache-from $image -f $dockerfile -t $image $context
+    - deploy:
+          name: Push $image
+          command: docker push $image
 
 version: 2
 jobs:
   alpine_base:
     <<: *defaults
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: 
-          name: docker login
-          command: docker login -u ${docker_username} -p ${docker_password}
-      - run: 
-          name: Pull alpine:3.6-base
-          command: docker pull krmcbride/alpine:3.6-base || true
-      - run: 
-          name: Build alpine:3.6-base
-          working_directory: ./alpine/3.6-base
-          command: docker build --cache-from krmcbride/alpine:3.6-base -t krmcbride/alpine:3.6-base .
-      - deploy:
-          name: Push alpine:3.6-base
-          command: docker push krmcbride/alpine:3.6-base
+    environment:
+      image: 'krmcbride/alpine:3.6-base'
+      dockerfile: ./base/alpine/3.6-base/Dockerfile
+      context: ./base/
   alpine_dev:
     <<: *defaults
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: 
-          name: docker login
-          command: docker login -u ${docker_username} -p ${docker_password}
-      - run: 
-          name: Pull alpine:3.6-dev
-          command: docker pull krmcbride/alpine:3.6-dev || true
-      - run: 
-          name: Build alpine:3.6-dev
-          working_directory: ./alpine/3.6-dev
-          command: docker build --cache-from krmcbride/alpine:3.6-dev -t krmcbride/alpine:3.6-dev .
-      - deploy:
-          name: Push alpine:3.6-dev
-          command: docker push krmcbride/alpine:3.6-dev
+    environment:
+      image: 'krmcbride/alpine:3.6-dev'
+      dockerfile: ./dev/alpine/3.6-base/Dockerfile
+      context: ./base/
   node_boron_dev:
     <<: *defaults
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: 
-          name: docker login
-          command: docker login -u ${docker_username} -p ${docker_password}
-      - run: 
-          name: Pull node:boron-dev
-          command: docker pull krmcbride/node:boron-dev || true
-      - run: 
-          name: Build node:boron-dev
-          working_directory: ./node/boron-dev
-          command: docker build --cache-from krmcbride/node:boron-dev -t krmcbride/node:boron-dev .
-      - deploy:
-          name: Push node:boron-dev
-          command: docker push krmcbride/node:boron-dev
-  openjdk_8_dev:
+    environment:
+      image: 'krmcbride/node:boron-dev'
+      dockerfile: ./node/boron-dev/Dockerfile
+      context: ./node/boron-dev/
+  java_8_dev:
     <<: *defaults
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run: 
-          name: docker login
-          command: docker login -u ${docker_username} -p ${docker_password}
-      - run: 
-          name: Pull openjdk:8-dev
-          command: docker pull krmcbride/openjdk:8-dev || true
-      - run: 
-          name: Build openjdk:8-dev
-          working_directory: ./openjdk/8-dev
-          command: docker build --cache-from krmcbride/openjdk:8-dev -t krmcbride/openjdk:8-dev -t krmcbride/java:8-dev .
-      - deploy:
-          name: Push openjdk:8-dev
-          command: docker push krmcbride/openjdk:8-dev
-      - deploy:
-          name: Push java:8-dev
-          command: docker push krmcbride/java:8-dev
+    environment:
+      image: 'krmcbride/java:8-dev'
+      dockerfile: ./java/8-dev/Dockerfile
+      context: ./java/8-dev/
 
 workflows:
   version: 2
@@ -92,6 +56,6 @@ workflows:
       - node_boron_dev:
           requires:
             - alpine_dev
-      - openjdk_8_dev:
+      - java_8_dev:
           requires:
             - alpine_dev
