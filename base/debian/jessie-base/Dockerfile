@@ -1,0 +1,18 @@
+FROM debian:jessie
+
+RUN echo "America/Los_Angeles" > /etc/timezone \
+    && /usr/sbin/dpkg-reconfigure -f noninteractive tzdata \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        vim.tiny \
+        ca-certificates \
+        curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /usr/src/app
+
+# bash
+COPY common/bash-it/ /usr/local/bash-it/
+COPY common/dotfiles/.bashrc /root/
+
+WORKDIR /root
+SHELL ["/bin/bash", "-c"]
+CMD ["/bin/bash"]
