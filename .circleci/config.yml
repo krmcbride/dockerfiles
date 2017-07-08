@@ -20,13 +20,37 @@ defaults: &defaults
 
 version: 2
 jobs:
-  alpine_base:
+  alpine_34_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/alpine:3.4-base'
+      dockerfile: ./base/alpine/3.4-base/Dockerfile
+      context: ./base/
+  alpine_34_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/alpine:3.4-dev'
+      dockerfile: ./base/alpine/3.4-dev/Dockerfile
+      context: ./base/
+  alpine_35_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/alpine:3.5-base'
+      dockerfile: ./base/alpine/3.5-base/Dockerfile
+      context: ./base/
+  alpine_35_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/alpine:3.5-dev'
+      dockerfile: ./base/alpine/3.5-dev/Dockerfile
+      context: ./base/
+  alpine_36_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-base'
       dockerfile: ./base/alpine/3.6-base/Dockerfile
       context: ./base/
-  alpine_dev:
+  alpine_36_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-dev'
@@ -61,17 +85,25 @@ workflows:
   version: 2
   build_dockerfiles:
     jobs:
-      - alpine_base
-      - alpine_dev:
+      - alpine_34_base
+      - alpine_34_dev:
           requires:
-            - alpine_base
+            - alpine_34_base
+      - alpine_35_base
+      - alpine_35_dev:
+          requires:
+            - alpine_35_base
+      - alpine_36_base
+      - alpine_36_dev:
+          requires:
+            - alpine_36_base
       - debian_base
       - debian_dev:
           requires:
             - debian_base
       - node_boron_dev:
           requires:
-            - alpine_dev
+            - alpine_34_dev
       - java_8_dev:
           requires:
-            - alpine_dev
+            - alpine_36_dev
