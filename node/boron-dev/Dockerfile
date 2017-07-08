@@ -1,4 +1,4 @@
-FROM krmcbride/alpine:3.6-dev
+FROM krmcbride/alpine:3.4-dev
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.11.0
