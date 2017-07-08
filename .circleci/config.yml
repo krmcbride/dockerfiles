@@ -6,16 +6,16 @@ defaults: &defaults
     - checkout
     - setup_remote_docker
     - run: 
-        name: docker login
+        name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
     - run: 
-        name: Pull $image
+        name: Pull
         command: docker pull $image || true
     - run: 
-        name: Build $image
+        name: Build
         command: docker build --cache-from $image -f $dockerfile -t $image $context
     - deploy:
-          name: Push $image
+          name: Push
           command: docker push $image
 
 version: 2
@@ -30,7 +30,7 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-dev'
-      dockerfile: ./dev/alpine/3.6-base/Dockerfile
+      dockerfile: ./base/alpine/3.6-dev/Dockerfile
       context: ./base/
   node_boron_dev:
     <<: *defaults
