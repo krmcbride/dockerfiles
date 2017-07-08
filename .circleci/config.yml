@@ -32,6 +32,18 @@ jobs:
       image: 'krmcbride/alpine:3.6-dev'
       dockerfile: ./base/alpine/3.6-dev/Dockerfile
       context: ./base/
+  debian_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/debian:jessie-base'
+      dockerfile: ./base/debian/jessie-base/Dockerfile
+      context: ./base/
+  debian_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/debian:jessie-dev'
+      dockerfile: ./base/debian/jessie-dev/Dockerfile
+      context: ./base/
   node_boron_dev:
     <<: *defaults
     environment:
@@ -53,6 +65,10 @@ workflows:
       - alpine_dev:
           requires:
             - alpine_base
+      - debian_base
+      - debian_dev:
+          requires:
+            - debian_base
       - node_boron_dev:
           requires:
             - alpine_dev
