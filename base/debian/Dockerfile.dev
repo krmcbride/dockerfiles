@@ -20,9 +20,9 @@ RUN apt-get update \
         cd /usr/local/vim_runtime \
         && git checkout 391f8b5c0680becede604ca84a60ed57f56e42bd \
         && rm -rf .git \
-    ) \
-    && export ZSH="/usr/local/oh-my-zsh"; \
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/d848c94804918138375041a9f800f401bec12068/tools/install.sh)"
+    )
+    #&& export ZSH="/usr/local/oh-my-zsh"; \
+    #    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/d848c94804918138375041a9f800f401bec12068/tools/install.sh)"
 
 COPY common/diff-* /usr/bin/
 COPY common/my_configs.vim /usr/local/vim_runtime/
