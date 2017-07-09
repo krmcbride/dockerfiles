@@ -1,4 +1,4 @@
-all: alpine
+all: generate
 
-alpine:
+generate:
 	@./scripts/generate.bash
