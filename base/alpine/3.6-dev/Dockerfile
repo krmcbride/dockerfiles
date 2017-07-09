@@ -1,4 +1,7 @@
+# Note: this file is generated, do not edit directly
+
 FROM krmcbride/alpine:3.6-base
+LABEL maintainer="krmcbride.io@gmail.com"
 
 RUN apk add --no-cache \
     perl \
@@ -8,12 +11,15 @@ RUN apk add --no-cache \
     vim \
     ctags \
     ncurses \
+    zsh \
     && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
     && ( \
         cd /usr/local/vim_runtime \
         && git checkout 391f8b5c0680becede604ca84a60ed57f56e42bd \
         && rm -rf .git \
-    )
+    ) \
+    && export ZSH="/usr/local/oh-my-zsh"; \
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/d848c94804918138375041a9f800f401bec12068/tools/install.sh)"
 
 COPY common/diff-* /usr/bin/
 COPY common/my_configs.vim /usr/local/vim_runtime/

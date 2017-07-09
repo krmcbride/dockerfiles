@@ -1,6 +1,6 @@
 # Note: this file is generated, do not edit directly
 
-FROM krmcbride/alpine:3.5-base
+FROM krmcbride/alpine
 LABEL maintainer="krmcbride.io@gmail.com"
 
 RUN apk add --no-cache \
