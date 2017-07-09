@@ -1,6 +1,6 @@
 # Note: this file is generated, do not edit directly
 
-FROM debian:jessie
+FROM debian
 LABEL maintainer="krmcbride.io@gmail.com"
 
 RUN echo "America/Los_Angeles" > /etc/timezone \

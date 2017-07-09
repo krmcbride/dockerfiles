@@ -1,4 +1,7 @@
+# Note: this file is generated, do not edit directly
+
 FROM alpine:3.4
+LABEL maintainer="krmcbride.io@gmail.com"
 
 RUN apk add --no-cache \
       tzdata \

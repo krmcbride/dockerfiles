@@ -1,6 +1,6 @@
 # Note: this file is generated, do not edit directly
 
-FROM alpine:3.5
+FROM alpine
 LABEL maintainer="krmcbride.io@gmail.com"
 
 RUN apk add --no-cache \
