@@ -5,10 +5,15 @@ debian: base/debian/jessie-dev/Dockerfile
 
 base/alpine/%-dev/Dockerfile: base/alpine/Dockerfile.dev
 	@echo "generating $@ from $<"
+	@[ -d "$(@D)" ] || mkdir -p "$(@D)"
 	@sed 's~^FROM.*$$~FROM krmcbride/alpine:'"$*"'-base~' "$<" > "$@"
 
 base/debian/%-dev/Dockerfile: base/debian/Dockerfile.dev
 	@echo "generating $@ from $<"
+	@[ -d "$(@D)" ] || mkdir -p "$(@D)"
 	@sed 's~^FROM.*$$~FROM krmcbride/debian:'"$*"'-base~' "$<" > "$@"
+
+clean:
+	rm -rf base/*/*-dev
 
 .PHONY: generate
