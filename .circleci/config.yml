@@ -1,9 +1,6 @@
 defaults: &defaults
   docker:
     - image: 'krmcbride/docker:17.03-ci'
-  branches:
-    only:
-      - master
   working_directory: /usr/src/app
   steps:
     - checkout
@@ -88,25 +85,35 @@ workflows:
   version: 2
   build_dockerfiles:
     jobs:
-      - alpine_34_base
+      - alpine_34_base:
+          filters: { branches: { only: [ master ] } }
       - alpine_34_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - alpine_34_base
-      - alpine_35_base
+      - alpine_35_base:
+          filters: { branches: { only: [ master ] } }
       - alpine_35_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - alpine_35_base
-      - alpine_36_base
+      - alpine_36_base:
+          filters: { branches: { only: [ master ] } }
       - alpine_36_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - alpine_36_base
-      - debian_jessie_base
+      - debian_jessie_base:
+          filters: { branches: { only: [ master ] } }
       - debian_jessie_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - debian_jessie_base
       - node_boron_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - alpine_34_dev
       - java_8_dev:
+          filters: { branches: { only: [ master ] } }
           requires:
             - alpine_36_dev
