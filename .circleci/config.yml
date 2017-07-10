@@ -6,7 +6,7 @@ defaults: &defaults
     - checkout
     - setup_remote_docker
     - attach_workspace:
-        at: /usr/src/app/build
+        at: ./build
     - run: 
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run: make
       - persist_to_workspace:
-          paths: /usr/src/app/build
+          paths: ./build
   alpine_34_base:
     <<: *defaults
     environment:
