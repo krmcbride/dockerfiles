@@ -66,6 +66,16 @@ jobs:
     environment:
       image: 'krmcbride/debian:8-dev'
       context: ./build/debian/8-dev
+  debian_9_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/debian:9-base'
+      context: ./build/debian/9-base
+  debian_9_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/debian:9-dev'
+      context: ./build/debian/9-dev
 
   java_8_alpine_base:
     <<: *defaults
