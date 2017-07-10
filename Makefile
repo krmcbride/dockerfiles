@@ -89,33 +89,33 @@ build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    dockerize -template $<:$@
 
 build/java/8-alpine-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    dockerize -template $<:$@
 
 build/java/8-debian-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    dockerize -template $<:$@
 
 build/java/8-debian-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    dockerize -template $<:$@
 
 ##
 ## node
@@ -136,17 +136,21 @@ build/node/6-debian-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/node/6-debian/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/node/6-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/node/6-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
+	    dockerize -template $<:$@
 
 build/node/6-debian-dev/Dockerfile: src/main/node/6-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
-		upstream=$$(cat src/main/node/6-debian/Dockerfile.upstream); \
+	    upstream=$$(cat src/main/node/6-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/node/6-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
-		dockerize -template $<:$@
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
+	    dockerize -template $<:$@
 
 
 
