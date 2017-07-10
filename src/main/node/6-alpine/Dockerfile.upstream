@@ -1,4 +1,4 @@
-FROM krmcbride/alpine:3.4-dev
+#FROM alpine:3.4
 
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.11.0
@@ -65,10 +65,5 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
   && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
   && apk del .build-deps-yarn
-
-# Include the kitchen sink for building modules
-RUN apk add --no-cache \
-    python \
-    build-base
 
 CMD [ "node" ]

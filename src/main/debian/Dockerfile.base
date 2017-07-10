@@ -1,7 +1,4 @@
-# Note: this file is generated, do not edit directly
-
-FROM debian
-LABEL maintainer="krmcbride.io@gmail.com"
+FROM debian:{{ .Env.version }}
 
 RUN echo "America/Los_Angeles" > /etc/timezone \
     && /usr/sbin/dpkg-reconfigure -f noninteractive tzdata \

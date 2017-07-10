@@ -1,7 +1,4 @@
-# Note: this file is generated, do not edit directly
-
-FROM alpine:3.6
-LABEL maintainer="krmcbride.io@gmail.com"
+FROM alpine:{{ .Env.version }}
 
 RUN apk add --no-cache \
       tzdata \
@@ -16,8 +13,8 @@ RUN apk add --no-cache \
     && mkdir -p /usr/src/app
 
 # bash
-COPY common/bash-it/ /usr/local/bash-it/
-COPY common/dotfiles/.bashrc /root/
+COPY bash-it/ /usr/local/bash-it/
+COPY dotfiles/.bashrc /root/
 
 WORKDIR /root
 CMD ["/bin/bash"]

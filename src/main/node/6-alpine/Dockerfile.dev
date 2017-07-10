@@ -1,0 +1,8 @@
+FROM krmcbride/alpine:3.4-dev
+
+{{ .Env.upstream }}
+
+# Include the kitchen sink for building modules
+RUN apk add --no-cache \
+    python \
+    build-base

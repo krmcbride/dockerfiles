@@ -1,7 +1,4 @@
-# Note: this file is generated, do not edit directly
-
-FROM krmcbride/alpine:3.5-base
-LABEL maintainer="krmcbride.io@gmail.com"
+FROM krmcbride/alpine:{{ .Env.version }}
 
 RUN apk add --no-cache \
     perl \
@@ -25,13 +22,13 @@ RUN apk add --no-cache \
     && rm -rf .git \
   )
 
-COPY common/diff-* /usr/bin/
-COPY common/my_configs.vim /usr/local/vim_runtime/
-COPY common/*.aliases.bash /usr/local/bash-it/aliases/enabled/
-COPY common/*.completion.bash /usr/local/bash-it/completion/enabled/
-COPY common/*.plugin.bash /usr/local/bash-it/plugins/enabled/
-COPY common/*aliases.zsh /usr/local/oh-my-zsh/custom/
-COPY common/gitconfig /etc/
-COPY common/dotfiles/.vimrc common/dotfiles/.zshrc /root/
+COPY diff-* /usr/bin/
+COPY my_configs.vim /usr/local/vim_runtime/
+COPY *.aliases.bash /usr/local/bash-it/aliases/enabled/
+COPY *.completion.bash /usr/local/bash-it/completion/enabled/
+COPY *.plugin.bash /usr/local/bash-it/plugins/enabled/
+COPY *aliases.zsh /usr/local/oh-my-zsh/custom/
+COPY gitconfig /etc/
+COPY dotfiles/.vimrc ./dotfiles/.zshrc /root/
 
 CMD ["/bin/zsh"]
