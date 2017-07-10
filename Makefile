@@ -46,11 +46,6 @@ test: build_alpine_34_dev build_debian_jessie_dev
 	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
 	docker run -it --rm krmcbride/debian:jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
 
-foo:
-	@export foo=blah; \
-	echo "foo=[$$foo]"
-
-
 clean:
 	rm -rf base/*/*-dev base/*/*-base
 
