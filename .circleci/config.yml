@@ -5,7 +5,7 @@ defaults: &defaults
   steps:
     - setup_remote_docker
     - attach_workspace:
-        at: /usr/src/app
+        at: /usr/src/app/build
     - run: ls -l
     - run: 
         name: Login
