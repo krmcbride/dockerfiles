@@ -1,3 +1,6 @@
+version: 2
+
+
 defaults: &defaults
   docker:
     - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
@@ -19,7 +22,7 @@ defaults: &defaults
           name: Push
           command: docker push $image
 
-version: 2
+
 jobs:
   make:
     docker:
@@ -31,6 +34,7 @@ jobs:
       - persist_to_workspace:
           root: /usr/src/app
           paths: .
+
   alpine_34_base:
     <<: *defaults
     environment:
@@ -41,16 +45,6 @@ jobs:
     environment:
       image: 'krmcbride/alpine:3.4-dev'
       context: ./build/alpine/3.4-dev
-  alpine_35_base:
-    <<: *defaults
-    environment:
-      image: 'krmcbride/alpine:3.5-base'
-      context: ./build/alpine/3.5-base
-  alpine_35_dev:
-    <<: *defaults
-    environment:
-      image: 'krmcbride/alpine:3.5-dev'
-      context: ./build/alpine/3.5-dev
   alpine_36_base:
     <<: *defaults
     environment:
@@ -73,24 +67,35 @@ jobs:
       image: 'krmcbride/debian:8-dev'
       context: ./build/debian/8-dev
 
-  # node_boron_dev:
-  #   <<: *defaults
-  #   environment:
-  #     image: 'krmcbride/node:boron-dev'
-  #     dockerfile: ./node/boron-dev/Dockerfile
-  #     context: ./node/boron-dev/
-  # java_8_dev:
-  #   <<: *defaults
-  #   environment:
-  #     image: 'krmcbride/java:8-dev'
-  #     dockerfile: ./java/8-dev/Dockerfile
-  #     context: ./java/8-dev/
+  java_8_alpine_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/java:8-alpine-base'
+      context: ./build/java/8-alpine-base
+  java_8_alpine_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/java:8-alpine-dev'
+      context: ./build/java/8-alpine-dev
+  java_8_debian_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/java:8-debian-base'
+      context: ./build/java/8-debian-base
+  java_8_debian_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/java:8-debian-dev'
+      context: ./build/java/8-debian-dev
+
+
 
 workflows:
   version: 2
   build:
     jobs:
       - make
+
       - alpine_34_base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -99,14 +104,6 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_34_base
-      - alpine_35_base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - make
-      - alpine_35_dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - alpine_35_base
       - alpine_36_base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -115,6 +112,7 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_36_base
+
       - debian_8_base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -123,11 +121,29 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_8_base
-      # - node_boron_dev:
-      #     filters: { branches: { only: [ master ] } }
-      #     requires:
-      #       - alpine_34_dev
-      # - java_8_dev:
-      #     filters: { branches: { only: [ master ] } }
-      #     requires:
-      #       - alpine_36_dev
+      - debian_9_base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - make
+      - debian_9_dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_9_base
+
+      - java_8_alpine_base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - alpine_36_base
+      - java_8_alpine_dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - alpine_36_dev
+      - java_8_debian_base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_9_base
+      - java_8_debian_dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_9_dev
+

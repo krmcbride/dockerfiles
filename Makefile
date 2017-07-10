@@ -47,11 +47,13 @@ debian: debian_base debian_dev
 
 .PHONY: debian_base
 debian_base: \
-	build/debian/8-base/Dockerfile
+	build/debian/8-base/Dockerfile \
+	build/debian/9-base/Dockerfile
 
 .PHONY: debian_dev
 debian_dev: \
-	build/debian/8-dev/Dockerfile
+	build/debian/8-dev/Dockerfile \
+	build/debian/9-dev/Dockerfile
 
 build/debian/%-base/Dockerfile: src/main/debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -74,8 +76,11 @@ java: \
 	build/java/8-alpine-dev/Dockerfile
 
 java_get_upstream:
+	set -e; \
 	curl -sSLo src/main/java/8-alpine/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/238cc35696423794b1951fc63d4cc9ffb8ca9685/8-jdk/alpine/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/openjdk/238cc35696423794b1951fc63d4cc9ffb8ca9685/8-jdk/alpine/Dockerfile; \
+	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/docker-library/openjdk/ae4562dcd2d99eb9d6224517f9e6b4ab4c2b4672/8-jdk/Dockerfile
 
 build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -90,6 +95,22 @@ build/java/8-alpine-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
 		upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+		dockerize -template $<:$@
+
+build/java/8-debian-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+		upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+		dockerize -template $<:$@
+
+build/java/8-debian-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+		upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 		dockerize -template $<:$@
 
