@@ -33,6 +33,9 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 	@export version=$*; dockerize -template $<:$@
 	@cp -R src/resources/* $(@D)
 
+build/docker/17.03-ci/Dockerfile: src/main/docker/17.03-ci/Dockerfile
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@cp $< $@
 
 build_alpine_34_base:
 	docker build -t krmcbride/alpine:3.4-base build/alpine/3.4-base/
@@ -45,6 +48,12 @@ build_debian_8_base:
 
 build_debian_8_dev: build_debian_8_base
 	docker build -t krmcbride/debian:8-dev build/debian/8-dev/
+
+build_ci_image: build/docker/17.03-ci/Dockerfile
+	docker build -t krmcbride/docker:17.03-ci $(<D)
+
+push_ci_image: build_ci_image
+	docker push krmcbride/docker:17.03-ci
 
 test: build_alpine_34_dev build_debian_8_dev
 	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'

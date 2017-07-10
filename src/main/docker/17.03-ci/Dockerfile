@@ -2,7 +2,8 @@ FROM docker:17.03-git
 
 RUN apk add --no-cache \
         py-pip \
-        openssl
+        openssl \
+        tar
 
 ENV DOCKER_COMPOSE_VERSION 1.13.0
 RUN pip install 'docker-compose=='${DOCKER_COMPOSE_VERSION}
