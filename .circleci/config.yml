@@ -3,7 +3,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
+    - image: 'krmcbride/docker@sha256:294d2a840e2dcb7bc377bc0169af759fbd30f5f11ad5d12dc499b0f1de88d849'
   working_directory: /usr/src/app
   steps:
     - setup_remote_docker
@@ -26,7 +26,7 @@ defaults: &defaults
 jobs:
   make:
     docker:
-      - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
+      - image: 'krmcbride/docker@sha256:294d2a840e2dcb7bc377bc0169af759fbd30f5f11ad5d12dc499b0f1de88d849'
     working_directory: /usr/src/app
     steps:
       - checkout
