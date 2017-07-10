@@ -98,6 +98,17 @@ jobs:
       image: 'krmcbride/java:8-debian-dev'
       context: ./build/java/8-debian-dev
 
+  node_6_debian_base:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/node:6-debian-base'
+      context: ./build/node/6-debian-base
+  node_6_debian_dev:
+    <<: *defaults
+    environment:
+      image: 'krmcbride/node:6-debian-dev'
+      context: ./build/node/6-debian-dev
+
 
 
 workflows:
@@ -156,4 +167,13 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_9_dev
+
+      - node_6_debian_base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_8_base
+      - node_6_debian_dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_8_dev
 
