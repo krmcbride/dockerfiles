@@ -3,7 +3,6 @@ defaults: &defaults
     - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
   working_directory: /usr/src/app
   steps:
-    - checkout
     - setup_remote_docker
     - attach_workspace:
         at: /usr/src/app
