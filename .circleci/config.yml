@@ -1,7 +1,10 @@
 defaults: &defaults
-  working_directory: /usr/src/app
   docker:
     - image: 'krmcbride/docker:17.03-ci'
+  branches:
+    only:
+      - master
+  working_directory: /usr/src/app
   steps:
     - checkout
     - setup_remote_docker
