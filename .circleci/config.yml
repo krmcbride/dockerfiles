@@ -28,7 +28,7 @@ jobs:
     working_directory: /usr/src/app
     steps:
       - checkout
-      - make
+      - run: make
       - persist_to_workspace:
           paths: ./build
   alpine_34_base:
