@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: 'krmcbride/docker:17.03-ci'
+    - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
   working_directory: /usr/src/app
   steps:
     - checkout
@@ -26,7 +26,7 @@ version: 2
 jobs:
   checkout:
     docker:
-      - image: 'krmcbride/docker:17.03-ci'
+      - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
     working_directory: /usr/src/app
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
           paths: .
   build:
     docker:
-      - image: 'krmcbride/docker:17.03-ci'
+      - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
     working_directory: /usr/src/app
     steps:
       - attach_workspace:
