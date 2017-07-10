@@ -116,6 +116,22 @@ build/java/8-debian-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 	    export upstream=$${upstream//FROM/\#FROM}; \
 		dockerize -template $<:$@
 
+##
+## node
+##
+.PHONY: node
+node: \
+	build/node/6-debian-base/Dockerfile \
+	build/node/6-debian-dev/Dockerfile
+
+node_get_upstream:
+	set -e; \
+	curl -sSLo src/main/node/6-debian/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/nodejs/docker-node/e2b78b4bde9440f2189007004a2ae4880f3eb030/6.11/Dockerfile; \
+	curl -sSLo src/main/node/6-debian/Dockerfile.buildpack \
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/587934fb063d770d0611e94b57c9dd7a38edf928/jessie/Dockerfile
+
+
 
 ##
 ## CI image

@@ -1,0 +1,6 @@
+FROM krmcbride/debian:8-dev
+
+{{ .Env.buildpack }}
+
+{{ .Env.upstream }}
+
