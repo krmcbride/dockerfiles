@@ -5,6 +5,8 @@ defaults: &defaults
   steps:
     - checkout
     - setup_remote_docker
+    - attach_workspace:
+        at: ./build
     - run: 
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
@@ -13,107 +15,119 @@ defaults: &defaults
         command: docker pull $image || true
     - run: 
         name: Build
-        command: docker build --cache-from $image -f $dockerfile -t $image $context
+        command: docker build --cache-from $image -t $image .
     - deploy:
           name: Push
           command: docker push $image
 
 version: 2
 jobs:
+  build:
+    docker:
+      - image: 'krmcbride/docker:17.03-ci'
+    working_directory: /usr/src/app
+    steps:
+      - checkout
+      - make
+      - persist_to_workspace:
+          paths: ./build
   alpine_34_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-base'
-      dockerfile: ./base/alpine/3.4-base/Dockerfile
-      context: ./base/
+    working_directory: ./build/alpine/3.4-base
   alpine_34_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-dev'
-      dockerfile: ./base/alpine/3.4-dev/Dockerfile
-      context: ./base/
+    working_directory: ./build/alpine/3.4-dev
   alpine_35_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.5-base'
-      dockerfile: ./base/alpine/3.5-base/Dockerfile
-      context: ./base/
+    working_directory: ./build/alpine/3.5-base
   alpine_35_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.5-dev'
-      dockerfile: ./base/alpine/3.5-dev/Dockerfile
-      context: ./base/
+    working_directory: ./build/alpine/3.5-dev
   alpine_36_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-base'
-      dockerfile: ./base/alpine/3.6-base/Dockerfile
-      context: ./base/
+    working_directory: ./build/alpine/3.6-base
   alpine_36_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-dev'
-      dockerfile: ./base/alpine/3.6-dev/Dockerfile
-      context: ./base/
-  debian_jessie_base:
+    working_directory: ./build/alpine/3.6-dev
+
+  debian_8_base:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:jessie-base'
-      dockerfile: ./base/debian/jessie-base/Dockerfile
-      context: ./base/
-  debian_jessie_dev:
+      image: 'krmcbride/debian:8-base'
+    working_directory: ./build/debian/8-base
+  debian_8_dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:jessie-dev'
-      dockerfile: ./base/debian/jessie-dev/Dockerfile
-      context: ./base/
-  node_boron_dev:
-    <<: *defaults
-    environment:
-      image: 'krmcbride/node:boron-dev'
-      dockerfile: ./node/boron-dev/Dockerfile
-      context: ./node/boron-dev/
-  java_8_dev:
-    <<: *defaults
-    environment:
-      image: 'krmcbride/java:8-dev'
-      dockerfile: ./java/8-dev/Dockerfile
-      context: ./java/8-dev/
+      image: 'krmcbride/debian:8-dev'
+    working_directory: ./build/debian/8-dev
+
+  # node_boron_dev:
+  #   <<: *defaults
+  #   environment:
+  #     image: 'krmcbride/node:boron-dev'
+  #     dockerfile: ./node/boron-dev/Dockerfile
+  #     context: ./node/boron-dev/
+  # java_8_dev:
+  #   <<: *defaults
+  #   environment:
+  #     image: 'krmcbride/java:8-dev'
+  #     dockerfile: ./java/8-dev/Dockerfile
+  #     context: ./java/8-dev/
 
 workflows:
   version: 2
   build_dockerfiles:
     jobs:
+      - build:
       - alpine_34_base:
           filters: { branches: { only: [ master ] } }
+          requires:
+            - build
       - alpine_34_dev:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_34_base
       - alpine_35_base:
           filters: { branches: { only: [ master ] } }
+          requires:
+            - build
       - alpine_35_dev:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_35_base
       - alpine_36_base:
           filters: { branches: { only: [ master ] } }
+          requires:
+            - build
       - alpine_36_dev:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_36_base
-      - debian_jessie_base:
-          filters: { branches: { only: [ master ] } }
-      - debian_jessie_dev:
+      - debian_8_base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_jessie_base
-      - node_boron_dev:
+            - build
+      - debian_8_dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_34_dev
-      - java_8_dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - alpine_36_dev
+            - debian_8_base
+      # - node_boron_dev:
+      #     filters: { branches: { only: [ master ] } }
+      #     requires:
+      #       - alpine_34_dev
+      # - java_8_dev:
+      #     filters: { branches: { only: [ master ] } }
+      #     requires:
+      #       - alpine_36_dev
