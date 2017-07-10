@@ -1,0 +1,3 @@
+FROM krmcbride/alpine:3.6-base
+
+{{ .Env.upstream }}

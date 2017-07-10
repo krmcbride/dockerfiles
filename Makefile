@@ -1,7 +1,10 @@
 SHELL = bash
 
 .PHONY: all
-all: clean base ## clean and generate all Dockerfiles and copy all resources to their build contexts
+all: \
+	clean \
+	base \
+	java
 
 .PHONY: base
 base: alpine debian
@@ -56,11 +59,39 @@ build/debian/%-base/Dockerfile: src/main/debian/Dockerfile.base
 	@export version=$*; dockerize -template $<:$@
 	@cp -R src/resources/* $(@D)
 
-build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev # build
+build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@export version=$*; dockerize -template $<:$@
 	@cp -R src/resources/* $(@D)
+
+##
+## java
+##
+.PHONY: java
+java: \
+	build/java/8-alpine-base/Dockerfile \
+	build/java/8-alpine-dev/Dockerfile
+
+java_get_upstream:
+	curl -sSLo src/main/java/8-alpine/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/docker-library/openjdk/238cc35696423794b1951fc63d4cc9ffb8ca9685/8-jdk/alpine/Dockerfile
+
+build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+		upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+		dockerize -template $<:$@
+
+build/java/8-alpine-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+		upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+		dockerize -template $<:$@
 
 
 ##
