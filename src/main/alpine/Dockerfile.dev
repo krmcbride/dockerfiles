@@ -1,4 +1,4 @@
-FROM krmcbride/alpine:{{ .Env.version }}
+FROM krmcbride/alpine:{{ .Env.version }}-base
 
 RUN apk add --no-cache \
     perl \

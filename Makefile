@@ -34,21 +34,21 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 	@cp -R src/resources/* $(@D)
 
 
-# build_alpine_34_base:
-# 	docker build -t krmcbride/alpine:3.4-base -f base/alpine/3.4-base/Dockerfile base/
+build_alpine_34_base:
+	docker build -t krmcbride/alpine:3.4-base build/alpine/3.4-base/
 
-# build_alpine_34_dev: build_alpine_34_base
-# 	docker build -t krmcbride/alpine:3.4-dev -f base/alpine/3.4-dev/Dockerfile base/
+build_alpine_34_dev: build_alpine_34_base
+	docker build -t krmcbride/alpine:3.4-dev build/alpine/3.4-dev/
 
-# build_debian_jessie_base:
-# 	docker build -t krmcbride/debian:jessie-base -f base/debian/jessie-base/Dockerfile base/
+build_debian_8_base:
+	docker build -t krmcbride/debian:8-base build/debian/8-base/
 
-# build_debian_jessie_dev: build_debian_jessie_base
-# 	docker build -t krmcbride/debian:jessie-dev -f base/debian/jessie-dev/Dockerfile base/
+build_debian_8_dev: build_debian_8_base
+	docker build -t krmcbride/debian:8-dev build/debian/8-dev/
 
-# test: build_alpine_34_dev build_debian_jessie_dev
-# 	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
-# 	docker run -it --rm krmcbride/debian:jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+test: build_alpine_34_dev build_debian_8_dev
+	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
+	docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
 
 clean:
 	rm -rf build

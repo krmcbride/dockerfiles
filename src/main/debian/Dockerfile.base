@@ -10,8 +10,8 @@ RUN echo "America/Los_Angeles" > /etc/timezone \
     && mkdir -p /usr/src/app
 
 # bash
-COPY common/bash-it/ /usr/local/bash-it/
-COPY common/dotfiles/.bashrc /root/
+COPY bash-it/ /usr/local/bash-it/
+COPY dotfiles/.bashrc /root/
 
 WORKDIR /root
 CMD ["/bin/bash"]
