@@ -21,7 +21,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  build:
+  make:
     docker:
       - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
     working_directory: /usr/src/app
@@ -88,13 +88,13 @@ jobs:
 
 workflows:
   version: 2
-  build_dockerfiles:
+  build
     jobs:
-      - build
+      - make
       - alpine_34_base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - build
+            - make
       - alpine_34_dev:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -102,7 +102,7 @@ workflows:
       - alpine_35_base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - build
+            - make
       - alpine_35_dev:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -110,7 +110,7 @@ workflows:
       - alpine_36_base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - build
+            - make
       - alpine_36_dev:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -118,7 +118,7 @@ workflows:
       - debian_8_base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - build
+            - make
       - debian_8_dev:
           filters: { branches: { only: [ master ] } }
           requires:
