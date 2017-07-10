@@ -30,8 +30,8 @@ jobs:
       - checkout
       - run: make
       - persist_to_workspace:
-          root: /usr/src/app
-          paths: build
+          root: .
+          paths: .
   alpine_34_base:
     <<: *defaults
     environment:
@@ -93,35 +93,35 @@ workflows:
     jobs:
       - build
       - alpine_34_base:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - build
       - alpine_34_dev:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - alpine_34_base
       - alpine_35_base:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - build
       - alpine_35_dev:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - alpine_35_base
       - alpine_36_base:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - build
       - alpine_36_dev:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - alpine_36_base
       - debian_8_base:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - build
       - debian_8_dev:
-          filters: { branches: { only: [ master ] } }
+        #filters: { branches: { only: [ master ] } }
           requires:
             - debian_8_base
       # - node_boron_dev:
