@@ -15,7 +15,7 @@ defaults: &defaults
         command: docker pull $image || true
     - run: 
         name: Build
-        command: docker build --cache-from $image -t $image .
+        command: docker build --cache-from $image -t $image $context
     - deploy:
           name: Push
           command: docker push $image
@@ -36,43 +36,42 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-base'
-    working_directory: ./build/alpine/3.4-base
   alpine_34_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-dev'
-    working_directory: ./build/alpine/3.4-dev
+      context: ./build/alpine/3.4-dev
   alpine_35_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.5-base'
-    working_directory: ./build/alpine/3.5-base
+      context: ./build/alpine/3.5-base
   alpine_35_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.5-dev'
-    working_directory: ./build/alpine/3.5-dev
+      context: ./build/alpine/3.5-dev
   alpine_36_base:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-base'
-    working_directory: ./build/alpine/3.6-base
+      context: ./build/alpine/3.6-base
   alpine_36_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-dev'
-    working_directory: ./build/alpine/3.6-dev
+      context: ./build/alpine/3.6-dev
 
   debian_8_base:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:8-base'
-    working_directory: ./build/debian/8-base
+      context: ./build/debian/8-base
   debian_8_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:8-dev'
-    working_directory: ./build/debian/8-dev
+      context: ./build/debian/8-dev
 
   # node_boron_dev:
   #   <<: *defaults
