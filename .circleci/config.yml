@@ -3,9 +3,10 @@ defaults: &defaults
     - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
   working_directory: /usr/src/app
   steps:
+    - checkout
     - setup_remote_docker
     - attach_workspace:
-        at: /usr/src/app
+        at: /usr/src/app/build
     - run: 
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
@@ -21,26 +22,16 @@ defaults: &defaults
 
 version: 2
 jobs:
-  checkout:
-    docker:
-      - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
-    working_directory: /usr/src/app
-    steps:
-      - checkout
-      - persist_to_workspace:
-          root: .
-          paths: .
   build:
     docker:
       - image: 'krmcbride/docker@sha256:13a3b2717fbfb13ca32db8c8789cf855560884e264ee83e787f3dd55bced2bfd'
     working_directory: /usr/src/app
     steps:
-      - attach_workspace:
-          at: /usr/src/app
+      - checkout
       - run: make
       - persist_to_workspace:
           root : .
-          paths: .
+          paths: build
   alpine_34_base:
     <<: *defaults
     environment:
@@ -100,10 +91,7 @@ workflows:
   version: 2
   build_dockerfiles:
     jobs:
-      - checkout
-      - build:
-          requires:
-            - checkout
+      - build
       - alpine_34_base:
           filters: { branches: { only: [ master ] } }
           requires:
