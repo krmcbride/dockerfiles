@@ -73,7 +73,9 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 .PHONY: java
 java: \
 	build/java/8-alpine-base/Dockerfile \
-	build/java/8-alpine-dev/Dockerfile
+	build/java/8-alpine-dev/Dockerfile \
+	build/java/8-debian-base/Dockerfile \
+	build/java/8-debian-dev/Dockerfile
 
 java_get_upstream:
 	set -e; \
