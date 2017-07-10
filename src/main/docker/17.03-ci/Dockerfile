@@ -4,7 +4,8 @@ RUN apk add --no-cache \
         py-pip \
         openssl \
         tar \
-        make
+        make \
+        bash
 
 ENV DOCKER_COMPOSE_VERSION 1.13.0
 RUN pip install 'docker-compose=='${DOCKER_COMPOSE_VERSION}
