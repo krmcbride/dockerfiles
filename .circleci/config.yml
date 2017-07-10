@@ -6,7 +6,7 @@ defaults: &defaults
     - setup_remote_docker
     - attach_workspace:
         at: /usr/src/app
-    - run: ls -l
+    - run: ls -l /usr/src/app
     - run: 
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
