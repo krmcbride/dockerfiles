@@ -30,8 +30,7 @@ jobs:
       - checkout
       - run: make
       - persist_to_workspace:
-          root : .
-          paths: build
+          paths: /usr/src/app/build
   alpine_34_base:
     <<: *defaults
     environment:
