@@ -6,7 +6,6 @@ defaults: &defaults
     - setup_remote_docker
     - attach_workspace:
         at: /usr/src/app
-    - run: ls -l /usr/src/app/*
     - run: 
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
@@ -36,6 +35,7 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-base'
+      context: ./build/alpine/3.4-base
   alpine_34_dev:
     <<: *defaults
     environment:
