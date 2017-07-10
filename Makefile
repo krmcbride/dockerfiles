@@ -5,8 +5,8 @@ alpine: alpine_base alpine_dev
 alpine_base: build/alpine/3.4-base/Dockerfile build/alpine/3.5-base/Dockerfile build/alpine/3.6-base/Dockerfile
 alpine_dev: build/alpine/3.4-dev/Dockerfile build/alpine/3.5-dev/Dockerfile build/alpine/3.6-dev/Dockerfile
 debian: debian_base debian_dev
-debian_base: build/debian/jessie-build/Dockerfile
-debian_dev: build/debian/jessie-dev/Dockerfile
+debian_base: build/debian/8-base/Dockerfile
+debian_dev: build/debian/8-dev/Dockerfile
 
 
 build/alpine/%-base/Dockerfile: src/main/alpine/Dockerfile.base
@@ -15,39 +15,42 @@ build/alpine/%-base/Dockerfile: src/main/alpine/Dockerfile.base
 	@export version=$*; dockerize -template $<:$@
 	@cp -R src/resources/* $(@D)
 
-base/alpine/%-dev/Dockerfile: base/alpine/Dockerfile.dev
+build/alpine/%-dev/Dockerfile: src/main/alpine/Dockerfile.dev
 	@echo "generating $@ from $<"
-	@[ -d "$(@D)" ] || mkdir -p "$(@D)"
-	@sed 's~^FROM.*$$~FROM krmcbride/alpine:'"$*"'-base~' "$<" > "$@"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@export version=$*; dockerize -template $<:$@
+	@cp -R src/resources/* $(@D)
 
-
-base/debian/%-base/Dockerfile: base/debian/Dockerfile.base
+build/debian/%-base/Dockerfile: src/main/debian/Dockerfile.base
 	@echo "generating $@ from $<"
-	@[ -d "$(@D)" ] || mkdir -p "$(@D)"
-	@sed 's~^FROM.*$$~FROM debian:'"$*"'~' "$<" > "$@"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@export version=$*; dockerize -template $<:$@
+	@cp -R src/resources/* $(@D)
 
-base/debian/%-dev/Dockerfile: base/debian/Dockerfile.dev
+build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 	@echo "generating $@ from $<"
-	@[ -d "$(@D)" ] || mkdir -p "$(@D)"
-	@sed 's~^FROM.*$$~FROM krmcbride/debian:'"$*"'-base~' "$<" > "$@"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@export version=$*; dockerize -template $<:$@
+	@cp -R src/resources/* $(@D)
 
-build_alpine_34_base:
-	docker build -t krmcbride/alpine:3.4-base -f base/alpine/3.4-base/Dockerfile base/
 
-build_alpine_34_dev: build_alpine_34_base
-	docker build -t krmcbride/alpine:3.4-dev -f base/alpine/3.4-dev/Dockerfile base/
+# build_alpine_34_base:
+# 	docker build -t krmcbride/alpine:3.4-base -f base/alpine/3.4-base/Dockerfile base/
 
-build_debian_jessie_base:
-	docker build -t krmcbride/debian:jessie-base -f base/debian/jessie-base/Dockerfile base/
+# build_alpine_34_dev: build_alpine_34_base
+# 	docker build -t krmcbride/alpine:3.4-dev -f base/alpine/3.4-dev/Dockerfile base/
 
-build_debian_jessie_dev: build_debian_jessie_base
-	docker build -t krmcbride/debian:jessie-dev -f base/debian/jessie-dev/Dockerfile base/
+# build_debian_jessie_base:
+# 	docker build -t krmcbride/debian:jessie-base -f base/debian/jessie-base/Dockerfile base/
 
-test: build_alpine_34_dev build_debian_jessie_dev
-	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
-	docker run -it --rm krmcbride/debian:jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+# build_debian_jessie_dev: build_debian_jessie_base
+# 	docker build -t krmcbride/debian:jessie-dev -f base/debian/jessie-dev/Dockerfile base/
+
+# test: build_alpine_34_dev build_debian_jessie_dev
+# 	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
+# 	docker run -it --rm krmcbride/debian:jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
 
 clean:
-	rm -rf base/*/*-dev base/*/*-base
+	rm -rf build
 
 .PHONY: all clean test
