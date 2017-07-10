@@ -17,5 +17,4 @@ COPY common/bash-it/ /usr/local/bash-it/
 COPY common/dotfiles/.bashrc /root/
 
 WORKDIR /root
-SHELL ["/bin/bash", "-c"]
 CMD ["/bin/bash"]
