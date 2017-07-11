@@ -1,20 +1,24 @@
 FROM debian:{{ .Env.version }}
 
-# Default to UTF-8 file.encoding
-ENV LANG C.UTF-8
-
 RUN echo "America/Los_Angeles" > /etc/timezone \
     && /usr/sbin/dpkg-reconfigure -f noninteractive tzdata \
     && apt-get update && apt-get install -y --no-install-recommends \
+        locales \
         vim.tiny \
         ca-certificates \
         curl \
     && rm -rf /var/lib/apt/lists/* \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US \
+    && update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8 \
     && mkdir -p /usr/src/app
 
-# bash
 COPY bash-it/ /usr/local/bash-it/
 COPY dotfiles/.bashrc /root/
+
+ENV LANG="en_US.UTF-8" \
+    LANGUAGE="en_US:en" \
+    LC_ALL="en_US.UTF-8"
 
 WORKDIR /root
 CMD ["/bin/bash"]
