@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     ctags \
     ncurses \
     zsh \
+    bc \
   && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
   && ( \
     cd /usr/local/vim_runtime \

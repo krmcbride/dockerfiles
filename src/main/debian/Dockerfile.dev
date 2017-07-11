@@ -11,6 +11,7 @@ RUN apt-get update \
     vim \
     ctags \
     zsh \
+    bc \
   && rm -rf /var/lib/apt/lists/ \
   && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
   && ( \
