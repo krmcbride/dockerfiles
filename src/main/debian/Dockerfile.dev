@@ -23,6 +23,12 @@ RUN apt-get update \
     cd /usr/local/oh-my-zsh \
     && git checkout d848c94804918138375041a9f800f401bec12068 \
     && rm -rf .git \
+  ) \
+  && git clone https://github.com/bhilburn/powerlevel9k.git  /usr/local/oh-my-zsh/custom/themes/powerlevel9k \
+  && ( \
+    cd /usr/local/oh-my-zsh/custom/themes/powerlevel9k \
+    && git checkout 4be16020b7cd7241b75c23db9f5bd3d4fce84686 \
+    && rm -rf .git \
   )
 
 COPY diff-* /usr/bin/
