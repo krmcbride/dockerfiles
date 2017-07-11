@@ -1,7 +1,6 @@
 export TERM="${TERM_OVERRIDE-xterm-256color}"
-export LANG=en_US.UTF-8
-export EDITOR='vim'
-export SSH_KEY_PATH="~/.ssh/rsa_id"
+export EDITOR="${EDITOR-vim}"
+export SSH_KEY_PATH="${SSH_KEY_PATH-~/.ssh/id_rsa}"
 export ZSH=/usr/local/oh-my-zsh
 
 ZSH_THEME="${ZSH_THEME-robbyrussell}"
