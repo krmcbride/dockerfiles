@@ -1,5 +1,8 @@
 FROM alpine:{{ .Env.version }}
 
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+
 RUN apk add --no-cache \
       tzdata \
     && cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime \

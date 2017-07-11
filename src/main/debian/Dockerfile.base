@@ -1,5 +1,8 @@
 FROM debian:{{ .Env.version }}
 
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+
 RUN echo "America/Los_Angeles" > /etc/timezone \
     && /usr/sbin/dpkg-reconfigure -f noninteractive tzdata \
     && apt-get update && apt-get install -y --no-install-recommends \
