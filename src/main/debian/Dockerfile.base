@@ -1,13 +1,16 @@
 FROM debian:{{ .Env.version }}
 
-RUN echo "America/Los_Angeles" > /etc/timezone \
-    && /usr/sbin/dpkg-reconfigure -f noninteractive tzdata \
-    && apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get dist-upgrade -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
         locales \
         vim.tiny \
         ca-certificates \
         curl \
     && rm -rf /var/lib/apt/lists/* \
+    && echo "America/Los_Angeles" > /etc/timezone \
+    && rm /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata \
     && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen en_US \
     && update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8 \
@@ -16,7 +19,8 @@ RUN echo "America/Los_Angeles" > /etc/timezone \
 COPY bash-it/ /usr/local/bash-it/
 COPY dotfiles/.bashrc /root/
 
-ENV LANG="en_US.UTF-8" \
+ENV TZ="America/Los_Angeles" \
+    LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
     LC_ALL="en_US.UTF-8"
 
