@@ -32,7 +32,7 @@ RUN apt-get update \
     && rm -rf .git \
   )
 
-COPY diff-* /usr/bin/
+COPY diff-* todo.txt/todo.sh /usr/local/bin/
 COPY my_configs.vim /usr/local/vim_runtime/
 COPY *.aliases.bash /usr/local/bash-it/aliases/enabled/
 COPY *.completion.bash /usr/local/bash-it/completion/enabled/
