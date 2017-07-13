@@ -1,5 +1,7 @@
 SHELL = bash
 
+NODE_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
+
 .PHONY: all
 all: \
 	clean \
@@ -171,50 +173,91 @@ build/docker/17.03-ci/Dockerfile: src/main/docker/17.03-ci/Dockerfile
 ##
 .PHONY: test
 test: \
+	test_alpine \
+	test_debian \
+	test_node
+
+.PHONY: test_alpine
+test_alpine: \
 	test_alpine_34_base \
 	test_alpine_34_dev \
 	test_alpine_36_base \
-	test_alpine_36_dev \
+	test_alpine_36_dev
+
+.PHONY: test_alpine_34_base
+test_alpine_34_base:
+	@echo running $@
+	@docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.4'
+
+.PHONY: test_alpine_34_dev
+test_alpine_34_dev:
+	@echo running $@
+	@docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
+	@docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_alpine_36_base
+test_alpine_36_base:
+	@echo running $@
+	@docker run -it --rm krmcbride/alpine:3.6-base cat /etc/issue | grep 'Alpine Linux 3.6'
+
+.PHONY: test_alpine_36_dev
+test_alpine_36_dev:
+	@echo running $@
+	@docker run -it --rm krmcbride/alpine:3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
+	@docker run -it --rm krmcbride/alpine:3.6-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_debian
+test_debian: \
 	test_debian_8_base \
 	test_debian_8_dev \
 	test_debian_9_base \
 	test_debian_9_dev
 
-.PHONY: test_alpine_34_base
-test_alpine_34_base:
-	docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.4'
-
-.PHONY: test_alpine_34_dev
-test_alpine_34_dev:
-	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
-	docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
-
-.PHONY: test_alpine_36_base
-test_alpine_36_base:
-	docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.6'
-
-.PHONY: test_alpine_36_dev
-test_alpine_36_dev:
-	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.6'
-	docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
-
 .PHONY: test_debian_8_base
 test_debian_8_base:
-	docker run -it --rm krmcbride/debian:8-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@echo running $@
+	@docker run -it --rm krmcbride/debian:8-base cat /etc/issue | grep 'Debian GNU/Linux 8'
 
 .PHONY: test_debian_8_dev
 test_debian_8_dev:
-	docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
-	docker run -it --rm krmcbride/debian:8-dev ls /usr/local/oh-my-zsh > /dev/null
+	@echo running $@
+	@docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/debian:8-dev ls /usr/local/oh-my-zsh > /dev/null
 
 .PHONY: test_debian_9_base
 test_debian_9_base:
-	docker run -it --rm krmcbride/debian:9-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@echo running $@
+	@docker run -it --rm krmcbride/debian:9-base cat /etc/issue | grep 'Debian GNU/Linux 9'
 
 .PHONY: test_debian_9_dev
 test_debian_9_dev:
-	docker run -it --rm krmcbride/debian:9-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
-	docker run -it --rm krmcbride/debian:9-dev ls /usr/local/oh-my-zsh > /dev/null
+	@echo running $@
+	@docker run -it --rm krmcbride/debian:9-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/debian:9-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_node
+test_node: \
+	test_node_6_debian_base \
+	test_node_6_debian_dev
+
+.PHONY: test_node_6_debian_base
+test_node_6_debian_base:
+	@echo running $@
+	@docker run -it --rm krmcbride/node:6-debian-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@version=$$(docker run -it --rm krmcbride/node:6-debian-base node --version); \
+	echo expecting $(NODE_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(NODE_VERSION)
+
+.PHONY: test_node_6_debian_dev
+test_node_6_debian_dev:
+	@echo running $@
+	@docker run -it --rm krmcbride/node:6-debian-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/node:6-debian-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/node:6-debian-dev node --version); \
+	echo expecting $(NODE_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(NODE_VERSION)
 
 
 ##
