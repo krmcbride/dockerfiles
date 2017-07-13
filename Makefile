@@ -170,12 +170,56 @@ build/docker/17.03-ci/Dockerfile: src/main/docker/17.03-ci/Dockerfile
 ## Testing
 ##
 .PHONY: test
-test: build_alpine_34_dev build_debian_8_dev
-	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
-	docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/bash-it > /dev/null
-	docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
-	docker run -it --rm krmcbride/debian:8-dev ls /usr/local/bash-it > /dev/null
+test: \
+	test_alpine_34_base \
+	test_alpine_34_dev \
+	test_alpine_36_base \
+	test_alpine_36_dev \
+	test_debian_8_base \
+	test_debian_8_dev \
+	test_debian_9_base \
+	test_debian_9_dev
 
+.PHONY: test_alpine_34_base
+test_alpine_34_base:
+	docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.4'
+
+.PHONY: test_alpine_34_dev
+test_alpine_34_dev:
+	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
+	docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_alpine_36_base
+test_alpine_36_base:
+	docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.6'
+
+.PHONY: test_alpine_36_dev
+test_alpine_36_dev:
+	docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.6'
+	docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_debian_8_base
+test_debian_8_base:
+	docker run -it --rm krmcbride/debian:8-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+
+.PHONY: test_debian_8_dev
+test_debian_8_dev:
+	docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	docker run -it --rm krmcbride/debian:8-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_debian_9_base
+test_debian_9_base:
+	docker run -it --rm krmcbride/debian:9-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+
+.PHONY: test_debian_9_dev
+test_debian_9_dev:
+	docker run -it --rm krmcbride/debian:9-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	docker run -it --rm krmcbride/debian:9-dev ls /usr/local/oh-my-zsh > /dev/null
+
+
+##
+## Build (just for local testing, CI does not use these)
+##
 .PHONY: build_alpine_34_base
 build_alpine_34_base:
 	docker build -t krmcbride/alpine:3.4-base build/alpine/3.4-base/
