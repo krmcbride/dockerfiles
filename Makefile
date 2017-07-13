@@ -78,12 +78,12 @@ java: \
 	build/java/8-debian-base/Dockerfile \
 	build/java/8-debian-dev/Dockerfile
 
-java_get_upstream:
+get_java_upstream:
 	set -e; \
 	curl -sSLo src/main/java/8-alpine/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/238cc35696423794b1951fc63d4cc9ffb8ca9685/8-jdk/alpine/Dockerfile; \
+	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/alpine/Dockerfile; \
 	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/ae4562dcd2d99eb9d6224517f9e6b4ab4c2b4672/8-jdk/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/Dockerfile
 
 build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -125,12 +125,12 @@ node: \
 	build/node/6-debian-base/Dockerfile \
 	build/node/6-debian-dev/Dockerfile
 
-node_get_upstream:
+get_node_upstream:
 	set -e; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/nodejs/docker-node/e2b78b4bde9440f2189007004a2ae4880f3eb030/6.11/Dockerfile; \
+	    https://raw.githubusercontent.com/nodejs/docker-node/master/6.11/Dockerfile; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.buildpack \
-	    https://raw.githubusercontent.com/docker-library/buildpack-deps/587934fb063d770d0611e94b57c9dd7a38edf928/jessie/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/jessie/Dockerfile
 
 build/node/6-debian-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -196,6 +196,9 @@ build_debian_8_dev: build_debian_8_base
 ##
 ## Plumbing
 ##
+.PHONY: get_upstreams
+get_upstreams: get_java_upstream get_node_upstream
+
 .PHONY: push_ci_image
 push_ci_image: build_ci_image
 	docker push krmcbride/docker:17.03-ci
