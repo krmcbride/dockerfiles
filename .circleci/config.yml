@@ -18,6 +18,12 @@ defaults: &defaults
     - run: 
         name: Build
         command: docker build --cache-from $image -t $image $context
+    - run: 
+        name: Test
+        command: |
+          set -e
+          test_target=$(echo ${image//krmcbride\//test_} | sed 's/[-:]/_/g' | sed 's/\.//g')
+          make $test_target
     - deploy:
           name: Push
           command: docker push $image
