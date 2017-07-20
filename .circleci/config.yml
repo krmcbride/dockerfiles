@@ -25,9 +25,17 @@ defaults: &defaults
           test_target=$(echo ${image//krmcbride\//test_} | sed 's/[-:]/_/g' | sed 's/\.//g')
           make $test_target
     - deploy:
-          name: Push
-          command: docker push $image
-
+        name: Push
+        command: |
+          set -e
+          if [ -n "$tags" ]; then 
+              array=(${tags//,/ })
+              for tag in "${array[@]}"; do
+                  docker tag $image $tag
+                  docker push $tag
+              done
+          fi
+          docker push $image
 
 jobs:
   make:
@@ -45,6 +53,7 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.4-base'
+      tags: 'krmcbride/alpine:3.4'
       context: ./build/alpine/3.4-base
   alpine_34_dev:
     <<: *defaults
@@ -55,6 +64,7 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/alpine:3.6-base'
+      tags: 'krmcbride/alpine:3.6,krmcbride/alpine:latest'
       context: ./build/alpine/3.6-base
   alpine_36_dev:
     <<: *defaults
@@ -66,21 +76,25 @@ jobs:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:8-base'
+      tags: 'krmcbride/debian:8,krmcbride/debian:jessie'
       context: ./build/debian/8-base
   debian_8_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:8-dev'
+      tags: 'krmcbride/debian:jessie-dev'
       context: ./build/debian/8-dev
   debian_9_base:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:9-base'
+      tags: 'krmcbride/debian:9,krmcbride/debian:stretch,krmcbride/debian:latest'
       context: ./build/debian/9-base
   debian_9_dev:
     <<: *defaults
     environment:
       image: 'krmcbride/debian:9-dev'
+      tags: 'krmcbride/debian:stretch-dev'
       context: ./build/debian/9-dev
 
   java_8_alpine_base:
