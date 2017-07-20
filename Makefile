@@ -318,21 +318,21 @@ test_java_8_debian_dev:
 ##
 ## Build (just for local testing, CI does not use these)
 ##
-.PHONY: build_alpine_34_base
-build_alpine_34_base:
-	docker build -t krmcbride/alpine:3.4-base build/alpine/3.4-base/
+.PHONY: build_alpine_36_base
+build_alpine_36_base:
+	docker build -t krmcbride/alpine:3.6-base build/alpine/3.6-base/
 
-.PHONY: build_alpine_34_dev
-build_alpine_34_dev: build_alpine_34_base
-	docker build -t krmcbride/alpine:3.4-dev build/alpine/3.4-dev/
+.PHONY: build_alpine_36_dev
+build_alpine_36_dev: build_alpine_36_base
+	docker build -t krmcbride/alpine:3.6-dev build/alpine/3.6-dev/
 
-.PHONY: build_debian_8_base
-build_debian_8_base:
-	docker build -t krmcbride/debian:8-base build/debian/8-base/
+.PHONY: build_debian_9_base
+build_debian_9_base:
+	docker build -t krmcbride/debian:9-base build/debian/9-base/
 
-.PHONY: build_debian_8_dev
-build_debian_8_dev: build_debian_8_base
-	docker build -t krmcbride/debian:8-dev build/debian/8-dev/
+.PHONY: build_debian_9_dev
+build_debian_9_dev: build_debian_9_base
+	docker build -t krmcbride/debian:9-dev build/debian/9-dev/
 
 
 ##
