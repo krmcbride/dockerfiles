@@ -13,7 +13,7 @@ RUN apk add --no-cache \
       curl \
       tar \
     && mkdir -p /usr/src/app \
-    && curl -fL -o dockerize.tar.gz "https://github.com/jwilder/dockerize/releases/download/v0.5.0/dockerize-alpine-linux-amd64-v0.5.0.tar.gz" \
+    && DOCKERIZE_VERSION=v0.5.0; curl -fL -o dockerize.tar.gz "https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz" \
     && tar -C /usr/local/bin/ -xzvf dockerize.tar.gz \
     && rm dockerize.tar.gz \
     && dockerize --version
