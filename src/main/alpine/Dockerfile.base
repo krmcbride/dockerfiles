@@ -10,6 +10,7 @@ RUN apk add --no-cache \
       bash \
       ca-certificates \
       curl \
+      tar \
     && mkdir -p /usr/src/app
 
 # bash
