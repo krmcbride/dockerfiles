@@ -1,6 +1,7 @@
 FROM krmcbride/alpine:{{ .Env.version }}-base
 
 RUN apk add --no-cache \
+    py-pip \
     perl \
     less \
     git \
@@ -47,8 +48,7 @@ RUN set -ex; \
     rm docker.tgz; \
     dockerd -v; \
     docker -v; \
-    curl -fL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m`" > /usr/local/bin/docker-compose; \
-    chmod +x /usr/local/bin/docker-compose; \
+    pip install 'docker-compose=='${DOCKER_COMPOSE_VERSION}; \
     docker-compose -v
 
 COPY diff-so-fancy/diff-* todo.txt/todo.sh /usr/local/bin/
