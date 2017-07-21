@@ -4,6 +4,7 @@ RUN apt-get update \
   && apt-get remove -y --purge \
     vim.tiny \
   && apt-get install -y --no-install-recommends \
+    man \
     perl \
     less \
     git \
