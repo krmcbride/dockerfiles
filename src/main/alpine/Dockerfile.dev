@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     ncurses \
     zsh \
     bc \
+    rsync \
   && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
   && ( \
     cd /usr/local/vim_runtime \

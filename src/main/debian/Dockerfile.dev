@@ -13,6 +13,7 @@ RUN apt-get update \
     ctags \
     zsh \
     bc \
+    rsync \
   && rm -rf /var/lib/apt/lists/ \
   && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
   && ( \
