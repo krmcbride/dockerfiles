@@ -49,85 +49,85 @@ jobs:
           root: /usr/src/app
           paths: .
 
-  alpine_34_base:
+  alpine_3.4-base:
     <<: *defaults
     environment:
+      context: ./build/alpine/3.4-base
       image: 'krmcbride/alpine:3.4-base'
       tags: 'krmcbride/alpine:3.4'
-      context: ./build/alpine/3.4-base
-  alpine_34_dev:
+  alpine_3.4-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/alpine:3.4-dev'
       context: ./build/alpine/3.4-dev
-  alpine_36_base:
+      image: 'krmcbride/alpine:3.4-dev'
+  alpine_3.6-base:
     <<: *defaults
     environment:
+      context: ./build/alpine/3.6-base
       image: 'krmcbride/alpine:3.6-base'
       tags: 'krmcbride/alpine:3.6,krmcbride/alpine:latest'
-      context: ./build/alpine/3.6-base
-  alpine_36_dev:
+  alpine_3.6-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/alpine:3.6-dev'
       context: ./build/alpine/3.6-dev
+      image: 'krmcbride/alpine:3.6-dev'
 
-  debian_8_base:
+  debian_jessie-base:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:8-base'
+      context: ./build/debian/jessie-base
+      image: 'krmcbride/debian:jessie-base'
       tags: 'krmcbride/debian:8,krmcbride/debian:jessie'
-      context: ./build/debian/8-base
-  debian_8_dev:
+  debian_jessie-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:8-dev'
-      tags: 'krmcbride/debian:jessie-dev'
-      context: ./build/debian/8-dev
-  debian_9_base:
+      context: ./build/debian/jessie-dev
+      image: 'krmcbride/debian:jessie-dev'
+      tags: 'krmcbride/debian:8-dev'
+  debian_stretch-base:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:9-base'
+      context: ./build/debian/stretch-base
+      image: 'krmcbride/debian:stretch-base'
       tags: 'krmcbride/debian:9,krmcbride/debian:stretch,krmcbride/debian:latest'
-      context: ./build/debian/9-base
-  debian_9_dev:
+  debian_stretch-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/debian:9-dev'
-      tags: 'krmcbride/debian:stretch-dev'
-      context: ./build/debian/9-dev
+      context: ./build/debian/stretch-dev
+      image: 'krmcbride/debian:stretch-dev'
+      tags: 'krmcbride/debian:9-dev'
 
-  java_8_alpine_base:
+  java_8-alpine3.6-base:
     <<: *defaults
     environment:
-      image: 'krmcbride/java:8-alpine-base'
-      context: ./build/java/8-alpine-base
-  java_8_alpine_dev:
+      context: ./build/java/8-alpine3.6-base
+      image: 'krmcbride/java:8-alpine3.6-base'
+  java_8-alpine3.6-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/java:8-alpine-dev'
-      context: ./build/java/8-alpine-dev
-  java_8_debian_base:
+      context: ./build/java/8-alpine3.6-dev
+      image: 'krmcbride/java:8-alpine3.6-dev'
+  java_8-stretch-base:
     <<: *defaults
     environment:
-      image: 'krmcbride/java:8-debian-base'
-      context: ./build/java/8-debian-base
-  java_8_debian_dev:
+      context: ./build/java/8-stretch-base
+      image: 'krmcbride/java:8-stretch-base'
+  java_8-stretch-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/java:8-debian-dev'
-      context: ./build/java/8-debian-dev
+      context: ./build/java/8-stretch-dev
+      image: 'krmcbride/java:8-stretch-dev'
 
-  node_6_debian_base:
+  node_6-jessie-base:
     <<: *defaults
     environment:
-      image: 'krmcbride/node:6-debian-base'
-      context: ./build/node/6-debian-base
-  node_6_debian_dev:
+      context: ./build/node/6-jessie-base
+      image: 'krmcbride/node:6-jessie-base'
+  node_6-jessie-dev:
     <<: *defaults
     environment:
-      image: 'krmcbride/node:6-debian-dev'
-      context: ./build/node/6-debian-dev
+      context: ./build/node/6-jessie-dev
+      image: 'krmcbride/node:6-jessie-dev'
 
 
 
@@ -137,63 +137,63 @@ workflows:
     jobs:
       - make
 
-      - alpine_34_base:
+      - alpine_3.4-base:
           filters: { branches: { only: [ master ] } }
           requires:
             - make
-      - alpine_34_dev:
+      - alpine_3.4-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_34_base
-      - alpine_36_base:
+            - alpine_3.4-base
+      - alpine_3.6-base:
           filters: { branches: { only: [ master ] } }
           requires:
             - make
-      - alpine_36_dev:
+      - alpine_3.6-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_36_base
+            - alpine_3.6-base
 
-      - debian_8_base:
+      - debian_jessie-base:
           filters: { branches: { only: [ master ] } }
           requires:
             - make
-      - debian_8_dev:
+      - debian_jessie-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_8_base
-      - debian_9_base:
+            - debian_jessie-base
+      - debian_stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
             - make
-      - debian_9_dev:
+      - debian_stretch-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_9_base
+            - debian_stretch-base
 
-      - java_8_alpine_base:
+      - java_8-alpine3.6-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_36_base
-      - java_8_alpine_dev:
+            - alpine_3.6-base
+      - java_8-alpine3.6-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_36_dev
-      - java_8_debian_base:
+            - alpine_3.6-dev
+      - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_9_base
-      - java_8_debian_dev:
+            - debian_stretch-base
+      - java_8-stretch-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_9_dev
+            - debian_stretch-dev
 
-      - node_6_debian_base:
+      - node_6-jessie-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_8_base
-      - node_6_debian_dev:
+            - debian_jessie-base
+      - node_6-jessie-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_8_dev
+            - debian_jessie-dev
 
