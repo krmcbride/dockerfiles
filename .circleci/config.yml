@@ -102,6 +102,7 @@ jobs:
     environment:
       context: ./build/java/8-alpine3.6-base
       image: 'krmcbride/java:8-alpine3.6-base'
+      tags: 'krmcbride/java:8-alpine3.6'
   java_8-alpine3.6-dev:
     <<: *defaults
     environment:
@@ -112,6 +113,7 @@ jobs:
     environment:
       context: ./build/java/8-stretch-base
       image: 'krmcbride/java:8-stretch-base'
+      tags: 'krmcbride/java:8-stretch,krmcbride/java:8,krmcbride/java:latest'
   java_8-stretch-dev:
     <<: *defaults
     environment:
