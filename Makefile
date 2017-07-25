@@ -51,13 +51,13 @@ debian: debian_base debian_dev
 
 .PHONY: debian_base
 debian_base: \
-	build/debian/8-base/Dockerfile \
-	build/debian/9-base/Dockerfile
+	build/debian/jessie-base/Dockerfile \
+	build/debian/stretch-base/Dockerfile
 
 .PHONY: debian_dev
 debian_dev: \
-	build/debian/8-dev/Dockerfile \
-	build/debian/9-dev/Dockerfile
+	build/debian/jessie-dev/Dockerfile \
+	build/debian/stretch-dev/Dockerfile
 
 build/debian/%-base/Dockerfile: src/main/debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -76,10 +76,10 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 ##
 .PHONY: java
 java: \
-	build/java/8-alpine-base/Dockerfile \
-	build/java/8-alpine-dev/Dockerfile \
-	build/java/8-debian-base/Dockerfile \
-	build/java/8-debian-dev/Dockerfile
+	build/java/8-alpine3.6-base/Dockerfile \
+	build/java/8-alpine3.6-dev/Dockerfile \
+	build/java/8-stretch-base/Dockerfile \
+	build/java/8-stretch-dev/Dockerfile
 
 get_java_upstream:
 	set -e; \
@@ -88,7 +88,7 @@ get_java_upstream:
 	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/Dockerfile
 
-build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
+build/java/8-alpine3.6-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -96,7 +96,7 @@ build/java/8-alpine-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
-build/java/8-alpine-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
+build/java/8-alpine3.6-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -104,7 +104,7 @@ build/java/8-alpine-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
-build/java/8-debian-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
+build/java/8-stretch-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -112,7 +112,7 @@ build/java/8-debian-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
-build/java/8-debian-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
+build/java/8-stretch-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -125,8 +125,8 @@ build/java/8-debian-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 ##
 .PHONY: node
 node: \
-	build/node/6-debian-base/Dockerfile \
-	build/node/6-debian-dev/Dockerfile
+	build/node/6-jessie-base/Dockerfile \
+	build/node/6-jessie-dev/Dockerfile
 
 get_node_upstream:
 	set -e; \
@@ -135,7 +135,7 @@ get_node_upstream:
 	curl -sSLo src/main/node/6-debian/Dockerfile.buildpack \
 	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/jessie/Dockerfile
 
-build/node/6-debian-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
+build/node/6-jessie-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -145,7 +145,7 @@ build/node/6-debian-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
-build/node/6-debian-dev/Dockerfile: src/main/node/6-debian/Dockerfile.dev
+build/node/6-jessie-dev/Dockerfile: src/main/node/6-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -181,134 +181,134 @@ test: \
 
 .PHONY: test_alpine
 test_alpine: \
-	test_alpine_34_base \
-	test_alpine_34_dev \
-	test_alpine_36_base \
-	test_alpine_36_dev
+	test_alpine_3.4-base \
+	test_alpine_3.4-dev \
+	test_alpine_3.6-base \
+	test_alpine_3.6-dev
 
-.PHONY: test_alpine_34_base
-test_alpine_34_base:
+.PHONY: test_alpine_3.4-base
+test_alpine_3.4-base:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.4'
 
-.PHONY: test_alpine_34_dev
-test_alpine_34_dev:
+.PHONY: test_alpine_3.4-dev
+test_alpine_3.4-dev:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
 	@docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
 
-.PHONY: test_alpine_36_base
-test_alpine_36_base:
+.PHONY: test_alpine_3.6-base
+test_alpine_3.6-base:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/alpine:3.6-base cat /etc/issue | grep 'Alpine Linux 3.6'
 
-.PHONY: test_alpine_36_dev
-test_alpine_36_dev:
+.PHONY: test_alpine_3.6-dev
+test_alpine_3.6-dev:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/alpine:3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
 	@docker run -it --rm krmcbride/alpine:3.6-dev ls /usr/local/oh-my-zsh > /dev/null
 
 .PHONY: test_debian
 test_debian: \
-	test_debian_8_base \
-	test_debian_8_dev \
-	test_debian_9_base \
-	test_debian_9_dev
+	test_debian_jessie-base \
+	test_debian_jessie-dev \
+	test_debian_stretch-base \
+	test_debian_stretch-dev
 
-.PHONY: test_debian_8_base
-test_debian_8_base:
+.PHONY: test_debian_jessie-base
+test_debian_jessie-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/debian:8-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/debian:jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
 
-.PHONY: test_debian_8_dev
-test_debian_8_dev:
+.PHONY: test_debian_jessie-dev
+test_debian_jessie-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/debian:8-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
-	@docker run -it --rm krmcbride/debian:8-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/debian:jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/debian:jessie-dev ls /usr/local/oh-my-zsh > /dev/null
 
-.PHONY: test_debian_9_base
-test_debian_9_base:
+.PHONY: test_debian_stretch-base
+test_debian_stretch-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/debian:9-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/debian:stretch-base cat /etc/issue | grep 'Debian GNU/Linux 9'
 
-.PHONY: test_debian_9_dev
-test_debian_9_dev:
+.PHONY: test_debian_stretch-dev
+test_debian_stretch-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/debian:9-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
-	@docker run -it --rm krmcbride/debian:9-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/debian:stretch-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/debian:stretch-dev ls /usr/local/oh-my-zsh > /dev/null
 
 .PHONY: test_node
 test_node: \
-	test_node_6_debian_base \
-	test_node_6_debian_dev
+	test_node_6-jessie-base \
+	test_node_6-jessie-dev
 
-.PHONY: test_node_6_debian_base
-test_node_6_debian_base:
+.PHONY: test_node_6-jessie-base
+test_node_6-jessie-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/node:6-debian-base cat /etc/issue | grep 'Debian GNU/Linux 8'
-	@version=$$(docker run -it --rm krmcbride/node:6-debian-base node --version); \
+	@docker run -it --rm krmcbride/node:6-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@version=$$(docker run -it --rm krmcbride/node:6-jessie-base node --version); \
 	echo expecting $(NODE_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(NODE_VERSION)
 
-.PHONY: test_node_6_debian_dev
-test_node_6_debian_dev:
+.PHONY: test_node_6-jessie-dev
+test_node_6-jessie-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/node:6-debian-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
-	@docker run -it --rm krmcbride/node:6-debian-dev ls /usr/local/oh-my-zsh > /dev/null
-	@version=$$(docker run -it --rm krmcbride/node:6-debian-dev node --version); \
+	@docker run -it --rm krmcbride/node:6-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/node:6-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/node:6-jessie-dev node --version); \
 	echo expecting $(NODE_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(NODE_VERSION)
 
 .PHONY: test_java
 test_java: \
-	test_java_8_alpine_base \
-	test_java_8_alpine_dev \
-	test_java_8_debian_base \
-	test_java_8_debian_dev
+	test_java_8-alpine3.6-base \
+	test_java_8-alpine3.6-dev \
+	test_java_8-stretch-base \
+	test_java_8-stretch-dev
 
-.PHONY: test_java_8_alpine_base
-test_java_8_alpine_base:
+.PHONY: test_java_8-alpine3.6-base
+test_java_8-alpine3.6-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine-base cat /etc/issue | grep 'Alpine Linux 3.6'
+	@docker run -it --rm krmcbride/java:8-alpine3.6-base cat /etc/issue | grep 'Alpine Linux 3.6'
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine-base \
+		krmcbride/java:8-alpine3.6-base \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION)
 
-.PHONY: test_java_8_alpine_dev
-test_java_8_alpine_dev:
+.PHONY: test_java_8-alpine3.6-dev
+test_java_8-alpine3.6-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine-dev cat /etc/issue | grep 'Alpine Linux 3.6'
-	@docker run -it --rm krmcbride/java:8-alpine-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/java:8-alpine3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
+	@docker run -it --rm krmcbride/java:8-alpine3.6-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine-dev \
+		krmcbride/java:8-alpine3.6-dev \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION)
 
-.PHONY: test_java_8_debian_base
-test_java_8_debian_base:
+.PHONY: test_java_8-stretch-base
+test_java_8-stretch-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-debian-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/java:8-stretch-base cat /etc/issue | grep 'Debian GNU/Linux 9'
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-debian-base \
+		krmcbride/java:8-stretch-base \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION)
 
-.PHONY: test_java_8_debian_dev
-test_java_8_debian_dev:
+.PHONY: test_java_8-stretch-dev
+test_java_8-stretch-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-debian-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
-	@docker run -it --rm krmcbride/java:8-debian-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/java:8-stretch-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/java:8-stretch-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-debian-dev \
+		krmcbride/java:8-stretch-dev \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION); \
 	echo got $${version}; \
@@ -318,21 +318,21 @@ test_java_8_debian_dev:
 ##
 ## Build (just for local testing, CI does not use these)
 ##
-.PHONY: build_alpine_36_base
-build_alpine_36_base:
+.PHONY: build_alpine_3.6-base
+build_alpine_3.6-base:
 	docker build -t krmcbride/alpine:3.6-base build/alpine/3.6-base/
 
-.PHONY: build_alpine_36_dev
-build_alpine_36_dev: build_alpine_36_base
+.PHONY: build_alpine_3.6-dev
+build_alpine_3.6-dev: build_alpine_3.6-base
 	docker build -t krmcbride/alpine:3.6-dev build/alpine/3.6-dev/
 
-.PHONY: build_debian_9_base
-build_debian_9_base:
-	docker build -t krmcbride/debian:9-base build/debian/9-base/
+.PHONY: build_debian_stretch-base
+build_debian_stretch-base:
+	docker build -t krmcbride/debian:stretch-base build/debian/stretch-base/
 
-.PHONY: build_debian_9_dev
-build_debian_9_dev: build_debian_9_base
-	docker build -t krmcbride/debian:9-dev build/debian/9-dev/
+.PHONY: build_debian_stretch-dev
+build_debian_stretch-dev: build_debian_stretch-base
+	docker build -t krmcbride/debian:stretch-dev build/debian/stretch-dev/
 
 
 ##
