@@ -22,7 +22,7 @@ defaults: &defaults
         name: Test
         command: |
           set -e
-          test_target=$(echo ${image//krmcbride\//test_} | sed 's/[-:]/_/g' | sed 's/\.//g')
+          test_target=$(echo ${image//krmcbride\//test_} | sed 's/:/_/')
           make $test_target
     - deploy:
         name: Push
