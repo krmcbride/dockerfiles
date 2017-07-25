@@ -125,11 +125,13 @@ jobs:
     environment:
       context: ./build/node/6-jessie-base
       image: 'krmcbride/node:6-jessie-base'
+      tags: 'krmcbride/node:boron-jessie-base,krmcbride/node:boron-jessie,krmcbride/node:boron,krmcbride/node:6-jessie,krmcbride/node:6'
   node_6-jessie-dev:
     <<: *defaults
     environment:
       context: ./build/node/6-jessie-dev
       image: 'krmcbride/node:6-jessie-dev'
+      tags: 'krmcbride/node:boron-jessie-dev,krmcbride/node:boron-dev,krmcbride/node:6-dev'
 
 
 
