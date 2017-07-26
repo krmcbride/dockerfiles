@@ -368,8 +368,8 @@ test_php: \
 .PHONY: test_php_5.6apache-jessie-base
 test_php_5.6apache-jessie-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/php:5.6-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
-	@version=$$(docker run -it --rm krmcbride/php:5.6-jessie-base php --version); \
+	@docker run -it --rm krmcbride/php:5.6apache-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@version=$$(docker run -it --rm krmcbride/php:5.6apache-jessie-base php --version); \
 	echo expecting $(PHP_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(PHP_VERSION)
@@ -377,9 +377,9 @@ test_php_5.6apache-jessie-base:
 .PHONY: test_php_5.6apache-jessie-dev
 test_php_5.6apache-jessie-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/php:5.6-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
-	@docker run -it --rm krmcbride/php:5.6-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
-	@version=$$(docker run -it --rm krmcbride/php:5.6-jessie-dev php --version); \
+	@docker run -it --rm krmcbride/php:5.6apache-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/php:5.6apache-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/php:5.6apache-jessie-dev php --version); \
 	echo expecting $(PHP_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(PHP_VERSION)
