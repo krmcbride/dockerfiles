@@ -178,6 +178,7 @@ get_php_upstream:
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-install; \
 	curl -sSLo src/resources/php/docker-php-source \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-source; \
+	chmod +x src/resources/php/docker-php-* src/resources/php/apache2-foreground; \
 	curl -sSLo src/main/php/5.6apache-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/Dockerfile
 
