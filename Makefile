@@ -2,6 +2,7 @@ SHELL = bash
 
 NODE_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
 JAVA_VERSION=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
+PHP_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
 
 .PHONY: all
 all: \
@@ -166,19 +167,19 @@ php: \
 
 get_php_upstream:
 	set -e; \
-	curl -sSLo src/resources/php/apache2-foreground \
+	curl -sSLo src/resources/php/5.6/apache2-foreground \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/apache2-foreground; \
-	curl -sSLo src/resources/php/docker-php-entrypoint \
+	curl -sSLo src/resources/php/5.6/docker-php-entrypoint \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-entrypoint; \
-	curl -sSLo src/resources/php/docker-php-ext-configure \
+	curl -sSLo src/resources/php/5.6/docker-php-ext-configure \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-configure; \
-	curl -sSLo src/resources/php/docker-php-ext-enable \
+	curl -sSLo src/resources/php/5.6/docker-php-ext-enable \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-enable; \
-	curl -sSLo src/resources/php/docker-php-ext-install \
+	curl -sSLo src/resources/php/5.6/docker-php-ext-install \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-install; \
-	curl -sSLo src/resources/php/docker-php-source \
+	curl -sSLo src/resources/php/5.6/docker-php-source \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-source; \
-	chmod +x src/resources/php/docker-php-* src/resources/php/apache2-foreground; \
+	chmod +x src/resources/php/5.6/docker-php-* src/resources/php/5.6/apache2-foreground; \
 	curl -sSLo src/main/php/5.6apache-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/Dockerfile
 
@@ -189,7 +190,7 @@ build/php/5.6apache-jessie-base/Dockerfile: src/main/php/5.6apache-debian/Docker
 	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
-	    cp -R src/resources/php/* $(@D)
+	    cp -R src/resources/php/5.6/* $(@D)
 
 build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
@@ -198,7 +199,7 @@ build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerf
 	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
-	    cp -R src/resources/php/* $(@D)
+	    cp -R src/resources/php/5.6/* $(@D)
 
 
 ##
@@ -221,6 +222,7 @@ test: \
 	test_alpine \
 	test_debian \
 	test_node \
+	test_php \
 	test_java
 
 .PHONY: test_alpine
@@ -357,6 +359,30 @@ test_java_8-stretch-dev:
 	echo expecting $(JAVA_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION)
+
+.PHONY: test_php
+test_php: \
+	test_php_5.6apache-jessie-base \
+	test_php_5.6apache-jessie-dev
+
+.PHONY: test_php_5.6apache-jessie-base
+test_php_5.6apache-jessie-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/php:5.6-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@version=$$(docker run -it --rm krmcbride/php:5.6-jessie-base php --version); \
+	echo expecting $(PHP_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(PHP_VERSION)
+
+.PHONY: test_php_5.6apache-jessie-dev
+test_php_5.6apache-jessie-dev:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/php:5.6-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
+	@docker run -it --rm krmcbride/php:5.6-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/php:5.6-jessie-dev php --version); \
+	echo expecting $(PHP_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(PHP_VERSION)
 
 
 ##
