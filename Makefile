@@ -8,6 +8,7 @@ all: \
 	clean \
 	base \
 	java \
+	php \
 	node
 
 .PHONY: base
@@ -155,6 +156,48 @@ build/node/6-jessie-dev/Dockerfile: src/main/node/6-debian/Dockerfile.dev
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
+##
+## php
+##
+.PHONY: php
+php: \
+	build/php/5.6apache-jessie-base/Dockerfile \
+	build/php/5.6apache-jessie-dev/Dockerfile
+
+get_php_upstream:
+	set -e; \
+	curl -sSLo src/resources/php/apache2-foreground \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/apache2-foreground; \
+	curl -sSLo src/resources/php/docker-php-entrypoint \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-entrypoint; \
+	curl -sSLo src/resources/php/docker-php-ext-configure \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-configure; \
+	curl -sSLo src/resources/php/docker-php-ext-enable \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-enable; \
+	curl -sSLo src/resources/php/docker-php-ext-install \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-ext-install; \
+	curl -sSLo src/resources/php/docker-php-source \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/docker-php-source; \
+	curl -sSLo src/main/php/5.6apache-debian/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/apache/Dockerfile
+
+build/php/5.6apache-jessie-base/Dockerfile: src/main/php/5.6apache-debian/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/php/* $(@D)
+
+build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerfile.dev
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/php/* $(@D)
 
 
 ##
@@ -339,7 +382,10 @@ build_debian_stretch-dev: build_debian_stretch-base
 ## Plumbing
 ##
 .PHONY: get_upstreams
-get_upstreams: get_java_upstream get_node_upstream
+get_upstreams: \
+	get_java_upstream \
+	get_node_upstream \
+	get_php_upstream
 
 .PHONY: push_ci_image
 push_ci_image: build_ci_image
