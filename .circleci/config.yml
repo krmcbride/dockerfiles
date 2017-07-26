@@ -133,6 +133,17 @@ jobs:
       image: 'krmcbride/node:6-jessie-dev'
       tags: 'krmcbride/node:boron-jessie-dev,krmcbride/node:boron-dev,krmcbride/node:6-dev'
 
+  php_5.6apache-jessie-base:
+    <<: *defaults
+    environment:
+      context: ./build/php/5.6apache-jessie-base
+      image: 'krmcbride/php:5.6apache-jessie-base'
+      tags: 'krmcbride/php:5.6apache-jessie'
+  php_5.6apache-jessie-dev:
+    <<: *defaults
+    environment:
+      context: ./build/php/5.6apache-jessie-dev
+      image: 'krmcbride/php:5.6apache-jessie-dev'
 
 
 workflows:
@@ -197,6 +208,15 @@ workflows:
           requires:
             - debian_jessie-base
       - node_6-jessie-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_jessie-dev
+
+      - php_5.6apache-jessie-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_jessie-base
+      - php_5.6apache-jessie-dev:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_jessie-dev
