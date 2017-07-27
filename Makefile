@@ -3,7 +3,8 @@ SHELL = bash
 DOCKER_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_VERSION='); version=$${version//DOCKER_VERSION=/}; echo $${version//[\" \\]/})
 DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
 NODE_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
-JAVA_VERSION=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
+JAVA_VERSION_DEBIAN=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
+JAVA_VERSION_ALPINE=$$(version=$$(cat src/main/java/8-alpine/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 PHP_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
 
 .PHONY: all
@@ -323,9 +324,9 @@ test_java_8-alpine3.6-base:
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-alpine3.6-base \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION); \
+	echo expecting $(JAVA_VERSION_ALPINE); \
 	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION)
+	echo $${version} | grep $(JAVA_VERSION_ALPINE)
 
 .PHONY: test_java_8-alpine3.6-dev
 test_java_8-alpine3.6-dev:
@@ -335,9 +336,9 @@ test_java_8-alpine3.6-dev:
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-alpine3.6-dev \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION); \
+	echo expecting $(JAVA_VERSION_ALPINE); \
 	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION)
+	echo $${version} | grep $(JAVA_VERSION_ALPINE)
 
 .PHONY: test_java_8-stretch-base
 test_java_8-stretch-base:
@@ -346,9 +347,9 @@ test_java_8-stretch-base:
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-stretch-base \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION); \
+	echo expecting $(JAVA_VERSION_DEBIAN); \
 	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION)
+	echo $${version} | grep $(JAVA_VERSION_DEBIAN)
 
 .PHONY: test_java_8-stretch-dev
 test_java_8-stretch-dev:
@@ -358,9 +359,9 @@ test_java_8-stretch-dev:
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-stretch-dev \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION); \
+	echo expecting $(JAVA_VERSION_DEBIAN); \
 	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION)
+	echo $${version} | grep $(JAVA_VERSION_DEBIAN)
 
 .PHONY: test_php
 test_php: \
