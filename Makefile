@@ -208,11 +208,21 @@ build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerf
 ##
 ## CI image
 ##
-.PHONY: build_ci_image 
-build_ci_image: build/docker/17.03-ci/Dockerfile
-	docker build -t krmcbride/docker:17.03-ci $(<D)
+.PHONY: build_ci_17.03_image 
+build_ci_17.03_image: build/docker/17.03-ci/Dockerfile
+	docker pull krmcbride/docker:17.03-ci || true
+	docker build --pull --cache-from krmcbride/docker:17.03-ci -t krmcbride/docker:17.03-ci $(<D)
 
 build/docker/17.03-ci/Dockerfile: src/main/docker/17.03-ci/Dockerfile
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@cp $< $@
+
+.PHONY: build_ci_17.06_image 
+build_ci_17.06_image: build/docker/17.06-ci/Dockerfile
+	docker pull krmcbride/docker:17.06-ci || true
+	docker build --pull --cache-from krmcbride/docker:17.06-ci -t krmcbride/docker:17.06-ci $(<D)
+
+build/docker/17.06-ci/Dockerfile: src/main/docker/17.06-ci/Dockerfile
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@cp $< $@
 
@@ -427,9 +437,13 @@ get_docker_upstream:
 	curl -sSLo src/resources/omz-custom/plugins/docker-compose/_docker_compose \
 	    https://raw.githubusercontent.com/docker/compose/$(DOCKER_COMPOSE_VERSION)/contrib/completion/zsh/_docker-compose
 
-.PHONY: push_ci_image
-push_ci_image: build_ci_image
+.PHONY: push_ci_17.03_image
+push_ci_17.03_image: build_ci_17.03_image
 	docker push krmcbride/docker:17.03-ci
+
+.PHONY: push_ci_17.06_image
+push_ci_17.06_image: build_ci_17.06_image
+	docker push krmcbride/docker:17.06-ci
 
 .PHONY: clean
 clean:
