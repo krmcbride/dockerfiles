@@ -1,5 +1,7 @@
 SHELL = bash
 
+DOCKER_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_VERSION='); version=$${version//DOCKER_VERSION=/}; echo $${version//[\" \\]/})
+DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
 NODE_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
 JAVA_VERSION=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 PHP_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
@@ -410,9 +412,19 @@ build_debian_stretch-dev: build_debian_stretch-base
 ##
 .PHONY: get_upstreams
 get_upstreams: \
+	get_docker_upstream \
 	get_java_upstream \
 	get_node_upstream \
 	get_php_upstream
+
+get_docker_upstream:
+	set -e; \
+	echo "Docker version is $(DOCKER_VERSION)"; \
+	curl -sSLo src/resources/omz-custom/plugins/docker/_docker \
+	    https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker; \
+	echo "Docker Compose version is $(DOCKER_COMPOSE_VERSION)"; \
+	curl -sSLo src/resources/omz-custom/plugins/docker-compose/_docker_compose \
+	    https://raw.githubusercontent.com/docker/compose/$(DOCKER_COMPOSE_VERSION)/contrib/completion/zsh/_docker-compose
 
 .PHONY: push_ci_image
 push_ci_image: build_ci_image

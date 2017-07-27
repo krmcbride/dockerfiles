@@ -57,7 +57,7 @@ COPY my_configs.vim /usr/local/vim_runtime/
 COPY *.aliases.bash /usr/local/bash-it/aliases/enabled/
 COPY *.completion.bash /usr/local/bash-it/completion/enabled/
 COPY *.plugin.bash /usr/local/bash-it/plugins/enabled/
-COPY *aliases.zsh /usr/local/oh-my-zsh/custom/
+COPY omz-custom/ /usr/local/oh-my-zsh/custom/
 COPY gitconfig /etc/
 COPY dotfiles/.vimrc ./dotfiles/.zshrc /root/
 

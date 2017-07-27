@@ -5,7 +5,7 @@ export ZSH=/usr/local/oh-my-zsh
 
 ZSH_THEME="${ZSH_THEME-robbyrussell}"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git)
+plugins=(git docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
