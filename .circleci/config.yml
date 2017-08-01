@@ -138,7 +138,7 @@ jobs:
     environment:
       context: ./build/php/5.6apache-jessie-base
       image: 'krmcbride/php:5.6apache-jessie-base'
-      tags: 'krmcbride/php:5.6apache-jessie'
+      tags: 'krmcbride/php:5.6apache-jessie,krmcbride/php:5.6apache'
   php_5.6apache-jessie-dev:
     <<: *defaults
     environment:
