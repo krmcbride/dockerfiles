@@ -5,6 +5,7 @@ RUN apk add --no-cache \
         openssl \
         tar \
         make \
+        curl \
         bash
 
 ENV DOCKER_COMPOSE_VERSION 1.14.0
