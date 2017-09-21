@@ -1,6 +1,7 @@
 FROM docker:17.03-git
 
 RUN apk add --no-cache \
+        coreutils \
         py-pip \
         openssl \
         tar \
