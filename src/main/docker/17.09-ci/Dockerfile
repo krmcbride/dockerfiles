@@ -1,4 +1,4 @@
-FROM docker:17.03-git
+FROM docker:17.09-git
 
 RUN apk add --no-cache \
         coreutils \
@@ -9,7 +9,7 @@ RUN apk add --no-cache \
         curl \
         bash
 
-ENV DOCKER_COMPOSE_VERSION 1.13.0
+ENV DOCKER_COMPOSE_VERSION 1.16.1
 RUN pip install 'docker-compose=='${DOCKER_COMPOSE_VERSION}
 
 ENV DOCKERIZE_VERSION v0.5.0
