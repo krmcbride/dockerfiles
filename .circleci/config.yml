@@ -134,6 +134,19 @@ jobs:
       image: 'krmcbride/node:6-jessie-dev'
       tags: 'krmcbride/node:boron-jessie-dev,krmcbride/node:boron-dev,krmcbride/node:6-dev'
 
+  node_8-stretch-base:
+    <<: *defaults
+    environment:
+      context: ./build/node/8-stretch-base
+      image: 'krmcbride/node:8-stretch-base'
+      tags: 'krmcbride/node:carbon-stretch-base,krmcbride/node:carbon-stretch,krmcbride/node:carbon,krmcbride/node:8-stretch,krmcbride/node:8'
+  node_8-stretch-dev:
+    <<: *defaults
+    environment:
+      context: ./build/node/8-stretch-dev
+      image: 'krmcbride/node:8-stretch-dev'
+      tags: 'krmcbride/node:carbon-stretch-dev,krmcbride/node:carbon-dev,krmcbride/node:8-dev'
+
   php_5.6apache-jessie-base:
     <<: *defaults
     environment:
@@ -212,6 +225,15 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_jessie-dev
+
+      - node_8-stretch-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_stretch-base
+      - node_8-stretch-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_stretch-dev
 
       - php_5.6apache-jessie-base:
           filters: { branches: { only: [ master ] } }

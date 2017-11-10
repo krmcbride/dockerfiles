@@ -2,7 +2,8 @@ SHELL = bash
 
 DOCKER_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_VERSION='); version=$${version//DOCKER_VERSION=/}; echo $${version//[\" \\]/})
 DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
-NODE_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
+NODE_BORON_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
+NODE_CARBON_VERSION=$$(version=$$(cat src/main/node/8-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
 JAVA_VERSION_DEBIAN=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 JAVA_VERSION_ALPINE=$$(version=$$(cat src/main/java/8-alpine/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 PHP_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
@@ -131,14 +132,20 @@ build/java/8-stretch-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 .PHONY: node
 node: \
 	build/node/6-jessie-base/Dockerfile \
-	build/node/6-jessie-dev/Dockerfile
+	build/node/6-jessie-dev/Dockerfile \
+	build/node/8-stretch-base/Dockerfile \
+	build/node/8-stretch-dev/Dockerfile
 
 get_node_upstream:
 	set -e; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/nodejs/docker-node/master/6/Dockerfile; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.buildpack \
-	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/jessie/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/jessie/Dockerfile; \
+	curl -sSLo src/main/node/8-debian/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/nodejs/docker-node/master/8/stretch/Dockerfile; \
+	curl -sSLo src/main/node/8-debian/Dockerfile.buildpack \
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/stretch/Dockerfile
 
 build/node/6-jessie-base/Dockerfile: src/main/node/6-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -156,6 +163,26 @@ build/node/6-jessie-dev/Dockerfile: src/main/node/6-debian/Dockerfile.dev
 	@\
 	    upstream=$$(cat src/main/node/6-debian/Dockerfile.upstream); \
 	    buildpack=$$(cat src/main/node/6-debian/Dockerfile.buildpack); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
+	    dockerize -template $<:$@
+
+build/node/8-stretch-base/Dockerfile: src/main/node/8-debian/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/node/8-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/node/8-debian/Dockerfile.buildpack); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
+	    dockerize -template $<:$@
+
+build/node/8-stretch-dev/Dockerfile: src/main/node/8-debian/Dockerfile.dev
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/node/8-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/node/8-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
 	    dockerize -template $<:$@
@@ -299,16 +326,18 @@ test_debian_stretch-dev:
 .PHONY: test_node
 test_node: \
 	test_node_6-jessie-base \
-	test_node_6-jessie-dev
+	test_node_6-jessie-dev \
+	test_node_8-stretch-base \
+	test_node_8-stretch-dev
 
 .PHONY: test_node_6-jessie-base
 test_node_6-jessie-base:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/node:6-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
 	@version=$$(docker run -it --rm krmcbride/node:6-jessie-base node --version); \
-	echo expecting $(NODE_VERSION); \
+	echo expecting $(NODE_BORON_VERSION); \
 	echo got $${version}; \
-	echo $${version} | grep $(NODE_VERSION)
+	echo $${version} | grep $(NODE_BORON_VERSION)
 
 .PHONY: test_node_6-jessie-dev
 test_node_6-jessie-dev:
@@ -316,9 +345,28 @@ test_node_6-jessie-dev:
 	@docker run -it --rm krmcbride/node:6-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
 	@docker run -it --rm krmcbride/node:6-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm krmcbride/node:6-jessie-dev node --version); \
-	echo expecting $(NODE_VERSION); \
+	echo expecting $(NODE_BORON_VERSION); \
 	echo got $${version}; \
-	echo $${version} | grep $(NODE_VERSION)
+	echo $${version} | grep $(NODE_BORON_VERSION)
+
+.PHONY: test_node_8-stretch-base
+test_node_8-stretch-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/node:8-stretch-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@version=$$(docker run -it --rm krmcbride/node:8-stretch-base node --version); \
+	echo expecting $(NODE_CARBON_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(NODE_CARBON_VERSION)
+
+.PHONY: test_node_8-stretch-dev
+test_node_8-stretch-dev:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/node:8-stretch-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/node:8-stretch-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/node:8-stretch-dev node --version); \
+	echo expecting $(NODE_CARBON_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(NODE_CARBON_VERSION)
 
 .PHONY: test_java
 test_java: \
