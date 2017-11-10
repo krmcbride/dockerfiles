@@ -11,6 +11,8 @@ RUN apt-get update \
         vim.tiny \
         ca-certificates \
         curl \
+        gnupg \
+        dirmngr \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && echo "America/Los_Angeles" > /etc/timezone \
