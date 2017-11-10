@@ -1,4 +1,4 @@
-FROM krmcbride/debian:{{ .Env.version }}-base
+FROM krmcbride/debian:{{ .Env.version }}
 
 RUN apt-get update \
   && apt-get remove -y --purge \

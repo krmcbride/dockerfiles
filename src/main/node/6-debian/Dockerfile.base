@@ -1,4 +1,4 @@
-FROM krmcbride/debian:8-base
+FROM krmcbride/debian:8
 
 # Git is required by package managers
 RUN apt-get update && apt-get install -y --no-install-recommends \

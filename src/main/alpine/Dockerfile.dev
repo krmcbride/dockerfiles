@@ -1,4 +1,4 @@
-FROM krmcbride/alpine:{{ .Env.version }}-base
+FROM krmcbride/alpine:{{ .Env.version }}
 
 RUN apk add --no-cache \
     py-pip \
