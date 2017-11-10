@@ -136,7 +136,7 @@ node: \
 get_node_upstream:
 	set -e; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/nodejs/docker-node/master/6.11/Dockerfile; \
+	    https://raw.githubusercontent.com/nodejs/docker-node/master/6/Dockerfile; \
 	curl -sSLo src/main/node/6-debian/Dockerfile.buildpack \
 	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/jessie/Dockerfile
 
