@@ -50,28 +50,28 @@ jobs:
           root: /usr/src/app
           paths: .
 
-  alpine_3.4-base:
-    <<: *defaults
-    environment:
-      context: ./build/alpine/3.4-base
-      image: 'krmcbride/alpine:3.4-base'
-      tags: 'krmcbride/alpine:3.4'
-  alpine_3.4-dev:
-    <<: *defaults
-    environment:
-      context: ./build/alpine/3.4-dev
-      image: 'krmcbride/alpine:3.4-dev'
   alpine_3.6-base:
     <<: *defaults
     environment:
       context: ./build/alpine/3.6-base
       image: 'krmcbride/alpine:3.6-base'
-      tags: 'krmcbride/alpine:3.6,krmcbride/alpine:latest'
+      tags: 'krmcbride/alpine:3.6'
   alpine_3.6-dev:
     <<: *defaults
     environment:
       context: ./build/alpine/3.6-dev
       image: 'krmcbride/alpine:3.6-dev'
+  alpine_3.7-base:
+    <<: *defaults
+    environment:
+      context: ./build/alpine/3.7-base
+      image: 'krmcbride/alpine:3.7-base'
+      tags: 'krmcbride/alpine:3.7,krmcbride/alpine:latest'
+  alpine_3.7-dev:
+    <<: *defaults
+    environment:
+      context: ./build/alpine/3.7-dev
+      image: 'krmcbride/alpine:3.7-dev'
 
   debian_jessie-base:
     <<: *defaults
@@ -98,17 +98,17 @@ jobs:
       image: 'krmcbride/debian:stretch-dev'
       tags: 'krmcbride/debian:9-dev'
 
-  java_8-alpine3.6-base:
+  java_8-alpine3.7-base:
     <<: *defaults
     environment:
-      context: ./build/java/8-alpine3.6-base
-      image: 'krmcbride/java:8-alpine3.6-base'
-      tags: 'krmcbride/java:8-alpine3.6'
-  java_8-alpine3.6-dev:
+      context: ./build/java/8-alpine3.7-base
+      image: 'krmcbride/java:8-alpine3.7-base'
+      tags: 'krmcbride/java:8-alpine3.7'
+  java_8-alpine3.7-dev:
     <<: *defaults
     environment:
-      context: ./build/java/8-alpine3.6-dev
-      image: 'krmcbride/java:8-alpine3.6-dev'
+      context: ./build/java/8-alpine3.7-dev
+      image: 'krmcbride/java:8-alpine3.7-dev'
   java_8-stretch-base:
     <<: *defaults
     environment:
@@ -166,14 +166,6 @@ workflows:
     jobs:
       - make
 
-      - alpine_3.4-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - make
-      - alpine_3.4-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - alpine_3.4-base
       - alpine_3.6-base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -182,6 +174,14 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - alpine_3.6-base
+      - alpine_3.7-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - make
+      - alpine_3.7-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - alpine_3.7-base
 
       - debian_jessie-base:
           filters: { branches: { only: [ master ] } }
@@ -200,14 +200,14 @@ workflows:
           requires:
             - debian_stretch-base
 
-      - java_8-alpine3.6-base:
+      - java_8-alpine3.7-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_3.6-base
-      - java_8-alpine3.6-dev:
+            - alpine_3.7-base
+      - java_8-alpine3.7-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - alpine_3.6-dev
+            - alpine_3.7-dev
       - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
