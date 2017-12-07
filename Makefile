@@ -27,15 +27,13 @@ alpine: alpine_base alpine_dev
 
 .PHONY: alpine_base
 alpine_base: \
-	build/alpine/3.4-base/Dockerfile \
-	build/alpine/3.5-base/Dockerfile \
-	build/alpine/3.6-base/Dockerfile
+	build/alpine/3.6-base/Dockerfile \
+	build/alpine/3.7-base/Dockerfile
 
 .PHONY: alpine_dev
 alpine_dev: \
-	build/alpine/3.4-dev/Dockerfile \
-	build/alpine/3.5-dev/Dockerfile \
-	build/alpine/3.6-dev/Dockerfile
+	build/alpine/3.6-dev/Dockerfile \
+	build/alpine/3.7-dev/Dockerfile
 
 build/alpine/%-base/Dockerfile: src/main/alpine/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -82,8 +80,8 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 ##
 .PHONY: java
 java: \
-	build/java/8-alpine3.6-base/Dockerfile \
-	build/java/8-alpine3.6-dev/Dockerfile \
+	build/java/8-alpine3.7-base/Dockerfile \
+	build/java/8-alpine3.7-dev/Dockerfile \
 	build/java/8-stretch-base/Dockerfile \
 	build/java/8-stretch-dev/Dockerfile
 
@@ -94,7 +92,7 @@ get_java_upstream:
 	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/Dockerfile
 
-build/java/8-alpine3.6-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
+build/java/8-alpine3.7-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -102,7 +100,7 @@ build/java/8-alpine3.6-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
-build/java/8-alpine3.6-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
+build/java/8-alpine3.7-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -267,21 +265,10 @@ test: \
 
 .PHONY: test_alpine
 test_alpine: \
-	test_alpine_3.4-base \
-	test_alpine_3.4-dev \
 	test_alpine_3.6-base \
-	test_alpine_3.6-dev
-
-.PHONY: test_alpine_3.4-base
-test_alpine_3.4-base:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.4-base cat /etc/issue | grep 'Alpine Linux 3.4'
-
-.PHONY: test_alpine_3.4-dev
-test_alpine_3.4-dev:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.4-dev cat /etc/issue | grep 'Alpine Linux 3.4'
-	@docker run -it --rm krmcbride/alpine:3.4-dev ls /usr/local/oh-my-zsh > /dev/null
+	test_alpine_3.6-dev \
+	test_alpine_3.7-base \
+	test_alpine_3.7-dev
 
 .PHONY: test_alpine_3.6-base
 test_alpine_3.6-base:
@@ -293,6 +280,17 @@ test_alpine_3.6-dev:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/alpine:3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
 	@docker run -it --rm krmcbride/alpine:3.6-dev ls /usr/local/oh-my-zsh > /dev/null
+
+.PHONY: test_alpine_3.7-base
+test_alpine_3.7-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/alpine:3.7-base cat /etc/issue | grep 'Alpine Linux 3.7'
+
+.PHONY: test_alpine_3.7-dev
+test_alpine_3.7-dev:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/alpine:3.7-dev cat /etc/issue | grep 'Alpine Linux 3.7'
+	@docker run -it --rm krmcbride/alpine:3.7-dev ls /usr/local/oh-my-zsh > /dev/null
 
 .PHONY: test_debian
 test_debian: \
@@ -370,29 +368,29 @@ test_node_8-stretch-dev:
 
 .PHONY: test_java
 test_java: \
-	test_java_8-alpine3.6-base \
-	test_java_8-alpine3.6-dev \
+	test_java_8-alpine3.7-base \
+	test_java_8-alpine3.7-dev \
 	test_java_8-stretch-base \
 	test_java_8-stretch-dev
 
-.PHONY: test_java_8-alpine3.6-base
-test_java_8-alpine3.6-base:
+.PHONY: test_java_8-alpine3.7-base
+test_java_8-alpine3.7-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine3.6-base cat /etc/issue | grep 'Alpine Linux 3.6'
+	@docker run -it --rm krmcbride/java:8-alpine3.7-base cat /etc/issue | grep 'Alpine Linux 3.7'
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine3.6-base \
+		krmcbride/java:8-alpine3.7-base \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION_ALPINE); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION_ALPINE)
 
-.PHONY: test_java_8-alpine3.6-dev
-test_java_8-alpine3.6-dev:
+.PHONY: test_java_8-alpine3.7-dev
+test_java_8-alpine3.7-dev:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
-	@docker run -it --rm krmcbride/java:8-alpine3.6-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/java:8-alpine3.7-dev cat /etc/issue | grep 'Alpine Linux 3.7'
+	@docker run -it --rm krmcbride/java:8-alpine3.7-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine3.6-dev \
+		krmcbride/java:8-alpine3.7-dev \
 		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
 	echo expecting $(JAVA_VERSION_ALPINE); \
 	echo got $${version}; \
@@ -449,13 +447,13 @@ test_php_5.6apache-jessie-dev:
 ##
 ## Build (just for local testing, CI does not use these)
 ##
-.PHONY: build_alpine_3.6-base
-build_alpine_3.6-base:
-	docker build -t krmcbride/alpine:3.6-base build/alpine/3.6-base/
+.PHONY: build_alpine_3.7-base
+build_alpine_3.7-base:
+	docker build -t krmcbride/alpine:3.7-base build/alpine/3.7-base/
 
-.PHONY: build_alpine_3.6-dev
-build_alpine_3.6-dev: build_alpine_3.6-base
-	docker build -t krmcbride/alpine:3.6-dev build/alpine/3.6-dev/
+.PHONY: build_alpine_3.7-dev
+build_alpine_3.7-dev: build_alpine_3.7-base
+	docker build -t krmcbride/alpine:3.7-dev build/alpine/3.7-dev/
 
 .PHONY: build_debian_stretch-base
 build_debian_stretch-base:
