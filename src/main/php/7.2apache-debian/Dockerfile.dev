@@ -1,0 +1,4 @@
+FROM krmcbride/debian:9-dev
+
+{{ .Env.upstream }}
+

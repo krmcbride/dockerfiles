@@ -6,7 +6,8 @@ NODE_BORON_VERSION=$$(version=$$(cat src/main/node/6-debian/Dockerfile.upstream 
 NODE_CARBON_VERSION=$$(version=$$(cat src/main/node/8-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
 JAVA_VERSION_DEBIAN=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 JAVA_VERSION_ALPINE=$$(version=$$(cat src/main/java/8-alpine/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
-PHP_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
+PHP_5_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
+PHP_7_VERSION=$$(version=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
 
 .PHONY: all
 all: \
@@ -191,7 +192,9 @@ build/node/8-stretch-dev/Dockerfile: src/main/node/8-debian/Dockerfile.dev
 .PHONY: php
 php: \
 	build/php/5.6apache-jessie-base/Dockerfile \
-	build/php/5.6apache-jessie-dev/Dockerfile
+	build/php/5.6apache-jessie-dev/Dockerfile \
+	build/php/7.2apache-stretch-base/Dockerfile \
+	build/php/7.2apache-stretch-dev/Dockerfile
 
 get_php_upstream:
 	set -e; \
@@ -209,7 +212,22 @@ get_php_upstream:
 	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-source; \
 	chmod +x src/resources/php/5.6/docker-php-* src/resources/php/5.6/apache2-foreground; \
 	curl -sSLo src/main/php/5.6apache-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/Dockerfile; \
+	curl -sSLo src/resources/php/7.2/apache2-foreground \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/apache2-foreground; \
+	curl -sSLo src/resources/php/7.2/docker-php-entrypoint \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/docker-php-entrypoint; \
+	curl -sSLo src/resources/php/7.2/docker-php-ext-configure \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/docker-php-ext-configure; \
+	curl -sSLo src/resources/php/7.2/docker-php-ext-enable \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/docker-php-ext-enable; \
+	curl -sSLo src/resources/php/7.2/docker-php-ext-install \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/docker-php-ext-install; \
+	curl -sSLo src/resources/php/7.2/docker-php-source \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/docker-php-source; \
+	chmod +x src/resources/php/7.2/docker-php-* src/resources/php/7.2/apache2-foreground; \
+	curl -sSLo src/main/php/7.2apache-debian/Dockerfile.upstream \
+	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/Dockerfile
 
 build/php/5.6apache-jessie-base/Dockerfile: src/main/php/5.6apache-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -228,6 +246,24 @@ build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerf
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/php/5.6/* $(@D)
+
+build/php/7.2apache-stretch-base/Dockerfile: src/main/php/7.2apache-debian/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/php/7.2/* $(@D)
+
+build/php/7.2apache-stretch-dev/Dockerfile: src/main/php/7.2apache-debian/Dockerfile.dev
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    upstream=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream); \
+	    export upstream=$${upstream//FROM/\#FROM}; \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/php/7.2/* $(@D)
 
 
 ##
@@ -422,16 +458,18 @@ test_java_8-stretch-dev:
 .PHONY: test_php
 test_php: \
 	test_php_5.6apache-jessie-base \
-	test_php_5.6apache-jessie-dev
+	test_php_5.6apache-jessie-dev \
+	test_php_7.2apache-stretch-base \
+	test_php_7.2apache-stretch-dev
 
 .PHONY: test_php_5.6apache-jessie-base
 test_php_5.6apache-jessie-base:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/php:5.6apache-jessie-base cat /etc/issue | grep 'Debian GNU/Linux 8'
 	@version=$$(docker run -it --rm krmcbride/php:5.6apache-jessie-base php --version); \
-	echo expecting $(PHP_VERSION); \
+	echo expecting $(PHP_5_VERSION); \
 	echo got $${version}; \
-	echo $${version} | grep $(PHP_VERSION)
+	echo $${version} | grep $(PHP_5_VERSION)
 
 .PHONY: test_php_5.6apache-jessie-dev
 test_php_5.6apache-jessie-dev:
@@ -439,9 +477,28 @@ test_php_5.6apache-jessie-dev:
 	@docker run -it --rm krmcbride/php:5.6apache-jessie-dev cat /etc/issue | grep 'Debian GNU/Linux 8'
 	@docker run -it --rm krmcbride/php:5.6apache-jessie-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm krmcbride/php:5.6apache-jessie-dev php --version); \
-	echo expecting $(PHP_VERSION); \
+	echo expecting $(PHP_5_VERSION); \
 	echo got $${version}; \
-	echo $${version} | grep $(PHP_VERSION)
+	echo $${version} | grep $(PHP_5_VERSION)
+
+.PHONY: test_php_7.2apache-stretch-base
+test_php_7.2apache-stretch-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/php:7.2apache-stretch-base cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@version=$$(docker run -it --rm krmcbride/php:7.2apache-stretch-base php --version); \
+	echo expecting $(PHP_7_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(PHP_7_VERSION)
+
+.PHONY: test_php_7.2apache-stretch-dev
+test_php_7.2apache-stretch-dev:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/php:7.2apache-stretch-dev cat /etc/issue | grep 'Debian GNU/Linux 9'
+	@docker run -it --rm krmcbride/php:7.2apache-stretch-dev ls /usr/local/oh-my-zsh > /dev/null
+	@version=$$(docker run -it --rm krmcbride/php:7.2apache-stretch-dev php --version); \
+	echo expecting $(PHP_7_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(PHP_7_VERSION)
 
 
 ##
