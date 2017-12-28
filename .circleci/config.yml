@@ -159,6 +159,18 @@ jobs:
       context: ./build/php/5.6apache-jessie-dev
       image: 'krmcbride/php:5.6apache-jessie-dev'
 
+  php_7.2apache-stretch-base:
+    <<: *defaults
+    environment:
+      context: ./build/php/7.2apache-stretch-base
+      image: 'krmcbride/php:7.2apache-stretch-base'
+      tags: 'krmcbride/php:7.2apache-stretch,krmcbride/php:7.2apache'
+  php_7.2apache-stretch-dev:
+    <<: *defaults
+    environment:
+      context: ./build/php/7.2apache-stretch-dev
+      image: 'krmcbride/php:7.2apache-stretch-dev'
+
 
 workflows:
   version: 2
@@ -243,4 +255,13 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_jessie-dev
+
+      - php_7.2apache-stretch-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_stretch-base
+      - php_7.2apache-stretch-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+            - debian_stretch-dev
 
