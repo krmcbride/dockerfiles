@@ -32,8 +32,8 @@ RUN apk add --no-cache \
   )
 
 ENV DOCKER_CHANNEL="stable" \
-    DOCKER_VERSION="17.09.0-ce" \
-    DOCKER_COMPOSE_VERSION="1.16.1"
+    DOCKER_VERSION="17.12.0-ce" \
+    DOCKER_COMPOSE_VERSION="1.18.0"
 RUN set -ex; \
     dockerArch='x86_64'; \
     if ! curl -fL -o docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz"; then \
