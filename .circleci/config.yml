@@ -7,7 +7,7 @@ defaults: &defaults
   working_directory: /usr/src/app
   steps:
     - setup_remote_docker:
-        version: 17.09.1-ce
+        version: 17.09.0-ce
     - attach_workspace:
         at: /usr/src/app
     - run: 
