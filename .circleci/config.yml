@@ -3,11 +3,11 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: 'krmcbride/docker@sha256:8e99a790c9bfde7ca2d3d77fca42df8d7ecb343d496454ac23aaa29491b6cc7d'
+    - image: 'krmcbride/docker@sha256:23ddb44a12cbb982abf1c0f9cb3b8f32c82f48b5fd3617705630549baa019ae7'
   working_directory: /usr/src/app
   steps:
     - setup_remote_docker:
-        version: 17.06.1-ce
+        version: 17.09.1-ce
     - attach_workspace:
         at: /usr/src/app
     - run: 
