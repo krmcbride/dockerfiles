@@ -269,21 +269,21 @@ build/php/7.2apache-stretch-dev/Dockerfile: src/main/php/7.2apache-debian/Docker
 ##
 ## CI image
 ##
-.PHONY: build_ci_17.06_image 
-build_ci_17.06_image: build/docker/17.06-ci/Dockerfile
-	docker pull krmcbride/docker:17.06-ci || true
-	docker build --pull --cache-from krmcbride/docker:17.06-ci -t krmcbride/docker:17.06-ci $(<D)
-
-build/docker/17.06-ci/Dockerfile: src/main/docker/17.06-ci/Dockerfile
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	@cp $< $@
-
 .PHONY: build_ci_17.09_image 
 build_ci_17.09_image: build/docker/17.09-ci/Dockerfile
 	docker pull krmcbride/docker:17.09-ci || true
 	docker build --pull --cache-from krmcbride/docker:17.09-ci -t krmcbride/docker:17.09-ci $(<D)
 
 build/docker/17.09-ci/Dockerfile: src/main/docker/17.09-ci/Dockerfile
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@cp $< $@
+
+.PHONY: build_ci_17.12_image 
+build_ci_17.12_image: build/docker/17.12-ci/Dockerfile
+	docker pull krmcbride/docker:17.12-ci || true
+	docker build --pull --cache-from krmcbride/docker:17.12-ci -t krmcbride/docker:17.12-ci $(<D)
+
+build/docker/17.12-ci/Dockerfile: src/main/docker/17.12-ci/Dockerfile
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@cp $< $@
 
@@ -540,13 +540,13 @@ get_docker_upstream:
 	curl -sSLo src/resources/omz-custom/plugins/docker-compose/_docker_compose \
 	    https://raw.githubusercontent.com/docker/compose/$(DOCKER_COMPOSE_VERSION)/contrib/completion/zsh/_docker-compose
 
-.PHONY: push_ci_17.06_image
-push_ci_17.06_image: build_ci_17.06_image
-	docker push krmcbride/docker:17.06-ci
-
 .PHONY: push_ci_17.09_image
 push_ci_17.09_image: build_ci_17.09_image
 	docker push krmcbride/docker:17.09-ci
+
+.PHONY: push_ci_17.12_image
+push_ci_17.12_image: build_ci_17.12_image
+	docker push krmcbride/docker:17.12-ci
 
 .PHONY: clean
 clean:
