@@ -7,3 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 {{ .Env.upstream }}
 
+{{ .Env.composer }}
+
+# Perhaps a better working dir than /var/www/html since we're talking PHP apps
+RUN mkdir /var/www/project
+WORKDIR /var/www/project

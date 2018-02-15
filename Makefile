@@ -235,6 +235,8 @@ build/php/5.6apache-jessie-base/Dockerfile: src/main/php/5.6apache-debian/Docker
 	@\
 	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    composer=$$(cat src/main/php/5.6apache-debian/Dockerfile.composer); \
+	    export composer=$${composer//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/php/5.6/* $(@D)
 
@@ -244,6 +246,8 @@ build/php/5.6apache-jessie-dev/Dockerfile: src/main/php/5.6apache-debian/Dockerf
 	@\
 	    upstream=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    composer=$$(cat src/main/php/5.6apache-debian/Dockerfile.composer); \
+	    export composer=$${composer//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/php/5.6/* $(@D)
 
@@ -253,6 +257,8 @@ build/php/7.2apache-stretch-base/Dockerfile: src/main/php/7.2apache-debian/Docke
 	@\
 	    upstream=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    composer=$$(cat src/main/php/7.2apache-debian/Dockerfile.composer); \
+	    export composer=$${composer//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/php/7.2/* $(@D)
 
@@ -262,6 +268,8 @@ build/php/7.2apache-stretch-dev/Dockerfile: src/main/php/7.2apache-debian/Docker
 	@\
 	    upstream=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    composer=$$(cat src/main/php/7.2apache-debian/Dockerfile.composer); \
+	    export composer=$${composer//FROM/\#FROM}; \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/php/7.2/* $(@D)
 
