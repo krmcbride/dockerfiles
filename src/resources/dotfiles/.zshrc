@@ -7,5 +7,9 @@ ZSH_THEME="${ZSH_THEME-robbyrussell}"
 DISABLE_AUTO_UPDATE="true"
 plugins=(git docker docker-compose)
 
+# https://github.com/moby/moby/commit/402caa94d23ea3ad47f814fc1414a93c5c8e7e58
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
 source $ZSH/oh-my-zsh.sh
 
