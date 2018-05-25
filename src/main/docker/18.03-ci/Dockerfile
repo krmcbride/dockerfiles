@@ -1,4 +1,4 @@
-FROM docker:17.06-git
+FROM docker:18.03-git
 
 RUN apk add --no-cache \
         coreutils \
@@ -9,10 +9,10 @@ RUN apk add --no-cache \
         curl \
         bash
 
-ENV DOCKER_COMPOSE_VERSION 1.14.0
+ENV DOCKER_COMPOSE_VERSION 1.21.1
 RUN pip install 'docker-compose=='${DOCKER_COMPOSE_VERSION}
 
-ENV DOCKERIZE_VERSION v0.5.0
+ENV DOCKERIZE_VERSION v0.6.1
 RUN apk add --no-cache wget \
     && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
