@@ -3,7 +3,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: 'krmcbride/docker@sha256:23ddb44a12cbb982abf1c0f9cb3b8f32c82f48b5fd3617705630549baa019ae7'
+    - image: 'krmcbride/docker:18.03-ci'
   working_directory: /usr/src/app
   steps:
     - setup_remote_docker:
