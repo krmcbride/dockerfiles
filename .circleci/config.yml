@@ -98,17 +98,6 @@ jobs:
       image: 'krmcbride/debian:stretch-dev'
       tags: 'krmcbride/debian:9-dev'
 
-  java_8-alpine3.7-base:
-    <<: *defaults
-    environment:
-      context: ./build/java/8-alpine3.7-base
-      image: 'krmcbride/java:8-alpine3.7-base'
-      tags: 'krmcbride/java:8-alpine3.7'
-  java_8-alpine3.7-dev:
-    <<: *defaults
-    environment:
-      context: ./build/java/8-alpine3.7-dev
-      image: 'krmcbride/java:8-alpine3.7-dev'
   java_8-stretch-base:
     <<: *defaults
     environment:
@@ -199,14 +188,6 @@ workflows:
           requires:
             - debian_stretch-base
 
-      - java_8-alpine3.7-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - alpine_3.7-base
-      - java_8-alpine3.7-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - alpine_3.7-dev
       - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:

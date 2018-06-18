@@ -4,7 +4,6 @@ DOCKER_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_V
 DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/debian/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
 NODE_CARBON_VERSION=$$(version=$$(cat src/main/node/8-debian/Dockerfile.upstream | grep 'ENV NODE_VERSION '); echo $${version//ENV NODE_VERSION /})
 JAVA_VERSION_DEBIAN=$$(version=$$(cat src/main/java/8-debian/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
-JAVA_VERSION_ALPINE=$$(version=$$(cat src/main/java/8-alpine/Dockerfile.upstream | grep 'ENV JAVA_VERSION '); echo $${version//ENV JAVA_VERSION /})
 PHP_5_VERSION=$$(version=$$(cat src/main/php/5.6apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
 PHP_7_VERSION=$$(version=$$(cat src/main/php/7.2apache-debian/Dockerfile.upstream | grep 'ENV PHP_VERSION '); echo $${version//ENV PHP_VERSION /})
 
@@ -87,26 +86,8 @@ java: \
 
 get_java_upstream:
 	set -e; \
-	curl -sSLo src/main/java/8-alpine/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/alpine/Dockerfile; \
 	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/master/8-jdk/Dockerfile
-
-build/java/8-alpine3.7-base/Dockerfile: src/main/java/8-alpine/Dockerfile.base
-	@echo "generating $@ from $<"
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	@\
-	    upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
-	    export upstream=$${upstream//FROM/\#FROM}; \
-	    dockerize -template $<:$@
-
-build/java/8-alpine3.7-dev/Dockerfile: src/main/java/8-alpine/Dockerfile.dev
-	@echo "generating $@ from $<"
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	@\
-	    upstream=$$(cat src/main/java/8-alpine/Dockerfile.upstream); \
-	    export upstream=$${upstream//FROM/\#FROM}; \
-	    dockerize -template $<:$@
+	    https://raw.githubusercontent.com/docker-library/openjdk/master/8/jdk/Dockerfile
 
 build/java/8-stretch-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -364,33 +345,8 @@ test_node_8-stretch-dev:
 
 .PHONY: test_java
 test_java: \
-	test_java_8-alpine3.7-base \
-	test_java_8-alpine3.7-dev \
 	test_java_8-stretch-base \
 	test_java_8-stretch-dev
-
-.PHONY: test_java_8-alpine3.7-base
-test_java_8-alpine3.7-base:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine3.7-base cat /etc/issue | grep 'Alpine Linux 3.7'
-	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine3.7-base \
-		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION_ALPINE); \
-	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION_ALPINE)
-
-.PHONY: test_java_8-alpine3.7-dev
-test_java_8-alpine3.7-dev:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/java:8-alpine3.7-dev cat /etc/issue | grep 'Alpine Linux 3.7'
-	@docker run -it --rm krmcbride/java:8-alpine3.7-dev ls /usr/local/oh-my-zsh > /dev/null
-	@version=$$(docker run -it --rm \
-		krmcbride/java:8-alpine3.7-dev \
-		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
-	echo expecting $(JAVA_VERSION_ALPINE); \
-	echo got $${version}; \
-	echo $${version} | grep $(JAVA_VERSION_ALPINE)
 
 .PHONY: test_java_8-stretch-base
 test_java_8-stretch-base:
