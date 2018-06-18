@@ -79,8 +79,6 @@ build/debian/%-dev/Dockerfile: src/main/debian/Dockerfile.dev
 ##
 .PHONY: java
 java: \
-	build/java/8-alpine3.7-base/Dockerfile \
-	build/java/8-alpine3.7-dev/Dockerfile \
 	build/java/8-stretch-base/Dockerfile \
 	build/java/8-stretch-dev/Dockerfile
 
