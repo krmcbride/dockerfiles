@@ -121,19 +121,6 @@ jobs:
       context: ./build/java/8-stretch-dev
       image: 'krmcbride/java:8-stretch-dev'
 
-  node_6-jessie-base:
-    <<: *defaults
-    environment:
-      context: ./build/node/6-jessie-base
-      image: 'krmcbride/node:6-jessie-base'
-      tags: 'krmcbride/node:boron-jessie-base,krmcbride/node:boron-jessie,krmcbride/node:boron,krmcbride/node:6-jessie,krmcbride/node:6'
-  node_6-jessie-dev:
-    <<: *defaults
-    environment:
-      context: ./build/node/6-jessie-dev
-      image: 'krmcbride/node:6-jessie-dev'
-      tags: 'krmcbride/node:boron-jessie-dev,krmcbride/node:boron-dev,krmcbride/node:6-dev'
-
   node_8-stretch-base:
     <<: *defaults
     environment:
@@ -228,15 +215,6 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
             - debian_stretch-dev
-
-      - node_6-jessie-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_jessie-base
-      - node_6-jessie-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_jessie-dev
 
       - node_8-stretch-base:
           filters: { branches: { only: [ master ] } }
