@@ -18,19 +18,19 @@ RUN apt-get update \
   && git clone https://github.com/amix/vimrc.git /usr/local/vim_runtime \
   && ( \
     cd /usr/local/vim_runtime \
-    && git checkout -b tmp 993ed5530408f0d737ee37b152c0e6c0cd1211ef \
+    && git checkout -b tmp a6b64938eb43f5c1e09b9218177d90f40b622e70 \
     && rm -rf .git \
   ) \
   && git clone https://github.com/robbyrussell/oh-my-zsh.git /usr/local/oh-my-zsh \
   && ( \
     cd /usr/local/oh-my-zsh \
-    && git checkout -b tmp 7cba6bb038fb699c44532992ee75e836b6576ac7 \
+    && git checkout -b tmp 7f6e6cf346268a6d2cdf6fe167a60827aab53f0b \
     && rm -rf .git \
   ) \
-  && git clone https://github.com/krmcbride/powerlevel9k.git  /usr/local/oh-my-zsh/custom/themes/powerlevel9k \
+  && git clone https://github.com/bhilburn/powerlevel9k.git  /usr/local/oh-my-zsh/custom/themes/powerlevel9k \
   && ( \
     cd /usr/local/oh-my-zsh/custom/themes/powerlevel9k \
-    && git checkout -b tmp 534ec66466541528da2b8d5cb520fcc7a27ca52a \
+    && git checkout -b tmp 358c105de7aa5e8109788adf65c08c44e368d418 \
     && rm -rf .git \
   )
 
