@@ -109,6 +109,7 @@ jobs:
     environment:
       context: ./build/java/8-stretch-dev
       image: 'krmcbride/java:8-stretch-dev'
+      tags: 'krmcbride/java:8-dev'
 
   node_8-stretch-base:
     <<: *defaults
