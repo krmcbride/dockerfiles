@@ -113,9 +113,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -Wl,--hash-style=both -pie"
 
 ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
 
-ENV PHP_VERSION 7.2.7
-ENV PHP_URL="https://secure.php.net/get/php-7.2.7.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.2.7.tar.xz.asc/from/this/mirror"
-ENV PHP_SHA256="eb01c0153b3baf1f64b8b044013ce414b52fede222df3f509e8ff209478f31f0" PHP_MD5=""
+ENV PHP_VERSION 7.2.10
+ENV PHP_URL="https://secure.php.net/get/php-7.2.10.tar.xz/from/this/mirror" PHP_ASC_URL="https://secure.php.net/get/php-7.2.10.tar.xz.asc/from/this/mirror"
+ENV PHP_SHA256="01c2154a3a8e3c0818acbdbc1a956832c828a0380ce6d1d14fea495ea21804f0" PHP_MD5=""
 
 RUN set -xe; \
 	\
@@ -164,7 +164,6 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libargon2-0-dev \
 		libcurl4-openssl-dev \
 		libedit-dev \
 		libsodium-dev \
@@ -174,6 +173,20 @@ RUN set -eux; \
 		zlib1g-dev \
 		${PHP_EXTRA_BUILD_DEPS:-} \
 	; \
+##<argon2>##
+	sed -e 's/stretch/buster/g' /etc/apt/sources.list > /etc/apt/sources.list.d/buster.list; \
+	{ \
+		echo 'Package: *'; \
+		echo 'Pin: release n=buster'; \
+		echo 'Pin-Priority: -10'; \
+		echo; \
+		echo 'Package: libargon2*'; \
+		echo 'Pin: release n=buster'; \
+		echo 'Pin-Priority: 990'; \
+	} > /etc/apt/preferences.d/argon2-buster; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends libargon2-dev; \
+##</argon2>##
 	rm -rf /var/lib/apt/lists/*; \
 	\
 	export \
@@ -227,6 +240,10 @@ RUN set -eux; \
 	make install; \
 	find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; \
 	make clean; \
+	\
+# https://github.com/docker-library/php/issues/692 (copy default example "php.ini" files somewhere easily discoverable)
+	cp -v php.ini-* "$PHP_INI_DIR/"; \
+	\
 	cd /; \
 	docker-php-source delete; \
 	\
