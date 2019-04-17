@@ -150,21 +150,6 @@ php: \
 
 get_php_upstream:
 	set -e; \
-	curl -sSLo src/resources/php/5.6/apache2-foreground \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/apache2-foreground; \
-	curl -sSLo src/resources/php/5.6/docker-php-entrypoint \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-entrypoint; \
-	curl -sSLo src/resources/php/5.6/docker-php-ext-configure \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-ext-configure; \
-	curl -sSLo src/resources/php/5.6/docker-php-ext-enable \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-ext-enable; \
-	curl -sSLo src/resources/php/5.6/docker-php-ext-install \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-ext-install; \
-	curl -sSLo src/resources/php/5.6/docker-php-source \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/docker-php-source; \
-	chmod +x src/resources/php/5.6/docker-php-* src/resources/php/5.6/apache2-foreground; \
-	curl -sSLo src/main/php/5.6apache-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/php/master/5.6/jessie/apache/Dockerfile; \
 	curl -sSLo src/resources/php/7.2/apache2-foreground \
 	    https://raw.githubusercontent.com/docker-library/php/master/7.2/stretch/apache/apache2-foreground; \
 	curl -sSLo src/resources/php/7.2/docker-php-entrypoint \
