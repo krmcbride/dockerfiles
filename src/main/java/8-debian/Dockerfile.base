@@ -1,3 +1,5 @@
 FROM krmcbride/debian:9
 
+{{ .Env.buildpack }}
+
 {{ .Env.upstream }}

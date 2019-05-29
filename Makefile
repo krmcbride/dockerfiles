@@ -59,14 +59,18 @@ java: \
 get_java_upstream:
 	set -e; \
 	curl -sSLo src/main/java/8-debian/Dockerfile.upstream \
-	    https://raw.githubusercontent.com/docker-library/openjdk/master/8/jdk/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/openjdk/master/8/jdk/Dockerfile; \
+	curl -sSLo src/main/java/8-debian/Dockerfile.buildpack \
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/stretch/scm/Dockerfile
 
 build/java/8-stretch-base/Dockerfile: src/main/java/8-debian/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
 	    upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/java/8-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
 build/java/8-stretch-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
@@ -74,7 +78,9 @@ build/java/8-stretch-dev/Dockerfile: src/main/java/8-debian/Dockerfile.dev
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
 	    upstream=$$(cat src/main/java/8-debian/Dockerfile.upstream); \
+	    buildpack=$$(cat src/main/java/8-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
+	    export buildpack=$${buildpack//FROM/\#FROM}; \
 	    dockerize -template $<:$@
 
 ##
