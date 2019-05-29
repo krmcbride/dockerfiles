@@ -36,9 +36,9 @@ RUN apt-get update \
   )
 
 ENV DOCKER_CHANNEL="stable" \
-    DOCKER_VERSION="18.09.0" \
+    DOCKER_VERSION="18.09.6" \
     DOCKER_COMPOSE_VERSION="1.22.0" \
-    KUBECTL_VERSION="1.10.11"
+    KUBECTL_VERSION="1.12.9"
 RUN set -ex; \
     dockerArch='x86_64'; \
     if ! curl -fL -o docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz"; then \
