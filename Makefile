@@ -17,35 +17,8 @@ all: \
 	node
 
 .PHONY: base
-base: alpine debian
+base: debian
 
-##
-## alpine
-##
-.PHONY: alpine
-alpine: alpine_base alpine_dev
-
-.PHONY: alpine_base
-alpine_base: \
-	build/alpine/3.6-base/Dockerfile \
-	build/alpine/3.7-base/Dockerfile
-
-.PHONY: alpine_dev
-alpine_dev: \
-	build/alpine/3.6-dev/Dockerfile \
-	build/alpine/3.7-dev/Dockerfile
-
-build/alpine/%-base/Dockerfile: src/main/alpine/Dockerfile.base
-	@echo "generating $@ from $<"
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	@export version=$*; dockerize -template $<:$@
-	@cp -R src/resources/* $(@D)
-
-build/alpine/%-dev/Dockerfile: src/main/alpine/Dockerfile.dev
-	@echo "generating $@ from $<"
-	@[ -d $(@D) ] || mkdir -p $(@D)
-	@export version=$*; dockerize -template $<:$@
-	@cp -R src/resources/* $(@D)
 
 ##
 ## debian
@@ -256,40 +229,10 @@ build/docker/18.09-ci/Dockerfile: src/main/docker/18.09-ci/Dockerfile
 ##
 .PHONY: test
 test: \
-	test_alpine \
 	test_debian \
 	test_node \
 	test_php \
 	test_java
-
-.PHONY: test_alpine
-test_alpine: \
-	test_alpine_3.6-base \
-	test_alpine_3.6-dev \
-	test_alpine_3.7-base \
-	test_alpine_3.7-dev
-
-.PHONY: test_alpine_3.6-base
-test_alpine_3.6-base:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.6-base cat /etc/issue | grep 'Alpine Linux 3.6'
-
-.PHONY: test_alpine_3.6-dev
-test_alpine_3.6-dev:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.6-dev cat /etc/issue | grep 'Alpine Linux 3.6'
-	@docker run -it --rm krmcbride/alpine:3.6-dev ls /usr/local/oh-my-zsh > /dev/null
-
-.PHONY: test_alpine_3.7-base
-test_alpine_3.7-base:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.7-base cat /etc/issue | grep 'Alpine Linux 3.7'
-
-.PHONY: test_alpine_3.7-dev
-test_alpine_3.7-dev:
-	@echo ===== running $@
-	@docker run -it --rm krmcbride/alpine:3.7-dev cat /etc/issue | grep 'Alpine Linux 3.7'
-	@docker run -it --rm krmcbride/alpine:3.7-dev ls /usr/local/oh-my-zsh > /dev/null
 
 .PHONY: test_debian
 test_debian: \
@@ -442,14 +385,6 @@ test_php_7.2apache-stretch-dev:
 ##
 ## Build (just for local testing, CI does not use these)
 ##
-.PHONY: build_alpine_3.7-base
-build_alpine_3.7-base:
-	docker build -t krmcbride/alpine:3.7-base build/alpine/3.7-base/
-
-.PHONY: build_alpine_3.7-dev
-build_alpine_3.7-dev: build_alpine_3.7-base
-	docker build -t krmcbride/alpine:3.7-dev build/alpine/3.7-dev/
-
 .PHONY: build_debian_stretch-base
 build_debian_stretch-base:
 	docker build -t krmcbride/debian:stretch-base build/debian/stretch-base/
