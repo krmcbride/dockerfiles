@@ -3,7 +3,7 @@ export EDITOR="${EDITOR-vim}"
 export SSH_KEY_PATH="${SSH_KEY_PATH-~/.ssh/id_rsa}"
 export ZSH=/usr/local/oh-my-zsh
 
-ZSH_THEME="${ZSH_THEME-robbyrussell}"
+ZSH_THEME="${ZSH_THEME-spaceship-prompt/spaceship}"
 DISABLE_AUTO_UPDATE="true"
 plugins=(git docker docker-compose kubectl)
 
