@@ -319,7 +319,7 @@ test_java_8-stretch-base:
 	@docker run -it --rm krmcbride/java:8-stretch-base cat /etc/issue | grep 'Debian GNU/Linux 9'
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-stretch-base \
-		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
+		bash -c 'java -version 2>&1 | grep Environment | sed '\''s/1\.8\.0_/8u/'\'''); \
 	echo expecting $(JAVA_VERSION_DEBIAN); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION_DEBIAN)
@@ -331,7 +331,7 @@ test_java_8-stretch-dev:
 	@docker run -it --rm krmcbride/java:8-stretch-dev ls /usr/local/oh-my-zsh > /dev/null
 	@version=$$(docker run -it --rm \
 		krmcbride/java:8-stretch-dev \
-		bash -c 'java -version 2>&1 | grep version | sed '\''s/openjdk version//; s/"//g; s/1\.//; s/\.0//; s/\([0-9]\)_\([0-9]\+\)/\1u\2/'\'''); \
+		bash -c 'java -version 2>&1 | grep Environment | sed '\''s/1\.8\.0_/8u/'\'''); \
 	echo expecting $(JAVA_VERSION_DEBIAN); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_VERSION_DEBIAN)
@@ -392,6 +392,10 @@ build_debian_stretch-base:
 .PHONY: build_debian_stretch-dev
 build_debian_stretch-dev: build_debian_stretch-base
 	docker build -t krmcbride/debian:stretch-dev build/debian/stretch-dev/
+
+.PHONY: build_java_8_stretch-base
+build_java_8_stretch-base:
+	docker build -t krmcbride/java:8-stretch-base build/java/8-stretch-base/
 
 
 ##
