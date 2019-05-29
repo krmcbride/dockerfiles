@@ -1,0 +1,11 @@
+FROM krmcbride/debian:9-dev
+
+# Python 2.7 is required by node-gyp
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python \
+    && rm -rf /var/lib/apt/lists/*
+
+{{ .Env.buildpack }}
+
+{{ .Env.upstream }}
+
