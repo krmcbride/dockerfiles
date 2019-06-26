@@ -93,10 +93,15 @@ get_node_upstream:
 	    https://raw.githubusercontent.com/nodejs/docker-node/master/8/stretch/Dockerfile; \
 	curl -sSLo src/main/node/8-debian/Dockerfile.buildpack \
 	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/stretch/Dockerfile; \
+	curl -sSLo src/resources/node/8-debian/docker-entrypoint.sh \
+	    https://raw.githubusercontent.com/nodejs/docker-node/master/8/stretch/docker-entrypoint.sh; \
 	curl -sSLo src/main/node/10-debian/Dockerfile.upstream \
 	    https://raw.githubusercontent.com/nodejs/docker-node/master/10/stretch/Dockerfile; \
 	curl -sSLo src/main/node/10-debian/Dockerfile.buildpack \
-	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/stretch/Dockerfile
+	    https://raw.githubusercontent.com/docker-library/buildpack-deps/master/stretch/Dockerfile; \
+	curl -sSLo src/resources/node/10-debian/docker-entrypoint.sh \
+	    https://raw.githubusercontent.com/nodejs/docker-node/master/10/stretch/docker-entrypoint.sh; \
+	chmod +x src/resources/node/8-debian/*.sh src/resources/node/10-debian/*.sh
 
 build/node/8-stretch-base/Dockerfile: src/main/node/8-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -106,7 +111,8 @@ build/node/8-stretch-base/Dockerfile: src/main/node/8-debian/Dockerfile.base
 	    buildpack=$$(cat src/main/node/8-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
-	    dockerize -template $<:$@
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/node/8-debian/* $(@D)
 
 build/node/8-stretch-dev/Dockerfile: src/main/node/8-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
@@ -116,7 +122,8 @@ build/node/8-stretch-dev/Dockerfile: src/main/node/8-debian/Dockerfile.dev
 	    buildpack=$$(cat src/main/node/8-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
-	    dockerize -template $<:$@
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/node/8-debian/* $(@D)
 
 build/node/10-stretch-base/Dockerfile: src/main/node/10-debian/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -126,7 +133,8 @@ build/node/10-stretch-base/Dockerfile: src/main/node/10-debian/Dockerfile.base
 	    buildpack=$$(cat src/main/node/10-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
-	    dockerize -template $<:$@
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/node/10-debian/* $(@D)
 
 build/node/10-stretch-dev/Dockerfile: src/main/node/10-debian/Dockerfile.dev
 	@echo "generating $@ from $<"
@@ -136,7 +144,8 @@ build/node/10-stretch-dev/Dockerfile: src/main/node/10-debian/Dockerfile.dev
 	    buildpack=$$(cat src/main/node/10-debian/Dockerfile.buildpack); \
 	    export upstream=$${upstream//FROM/\#FROM}; \
 	    export buildpack=$${buildpack//FROM/\#FROM}; \
-	    dockerize -template $<:$@
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/node/8-debian/* $(@D)
 
 ##
 ## php
@@ -214,7 +223,7 @@ build/php/7.2apache-stretch-dev/Dockerfile: src/main/php/7.2apache-debian/Docker
 ##
 ## CI image
 ##
-.PHONY: build_ci_18.09_image 
+.PHONY: build_ci_18.09_image
 build_ci_18.09_image: build/docker/18.09-ci/Dockerfile
 	docker pull krmcbride/docker:18.09-ci || true
 	docker build --pull --cache-from krmcbride/docker:18.09-ci -t krmcbride/docker:18.09-ci $(<D)
