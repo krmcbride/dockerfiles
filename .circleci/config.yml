@@ -10,16 +10,16 @@ defaults: &defaults
         version: 17.09.0-ce
     - attach_workspace:
         at: /usr/src/app
-    - run: 
+    - run:
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
-    - run: 
+    - run:
         name: Pull
         command: docker pull $image || true
-    - run: 
+    - run:
         name: Build
         command: docker build --cache-from $image -t $image $context
-    - run: 
+    - run:
         name: Test
         command: |
           set -e
@@ -29,7 +29,7 @@ defaults: &defaults
         name: Push
         command: |
           set -e
-          if [ -n "$tags" ]; then 
+          if [ -n "$tags" ]; then
               array=(${tags//,/ })
               for tag in "${array[@]}"; do
                   docker tag $image $tag
@@ -50,18 +50,6 @@ jobs:
           root: /usr/src/app
           paths: .
 
-  debian_jessie-base:
-    <<: *defaults
-    environment:
-      context: ./build/debian/jessie-base
-      image: 'krmcbride/debian:jessie-base'
-      tags: 'krmcbride/debian:8,krmcbride/debian:jessie'
-  debian_jessie-dev:
-    <<: *defaults
-    environment:
-      context: ./build/debian/jessie-dev
-      image: 'krmcbride/debian:jessie-dev'
-      tags: 'krmcbride/debian:8-dev'
   debian_stretch-base:
     <<: *defaults
     environment:
@@ -88,19 +76,6 @@ jobs:
       image: 'krmcbride/java:8-stretch-dev'
       tags: 'krmcbride/java:8-dev'
 
-  node_8-stretch-base:
-    <<: *defaults
-    environment:
-      context: ./build/node/8-stretch-base
-      image: 'krmcbride/node:8-stretch-base'
-      tags: 'krmcbride/node:carbon-stretch-base,krmcbride/node:carbon-stretch,krmcbride/node:carbon,krmcbride/node:8-stretch,krmcbride/node:8'
-  node_8-stretch-dev:
-    <<: *defaults
-    environment:
-      context: ./build/node/8-stretch-dev
-      image: 'krmcbride/node:8-stretch-dev'
-      tags: 'krmcbride/node:carbon-stretch-dev,krmcbride/node:carbon-dev,krmcbride/node:8-dev'
-
   node_10-stretch-base:
     <<: *defaults
     environment:
@@ -114,30 +89,6 @@ jobs:
       image: 'krmcbride/node:10-stretch-dev'
       tags: 'krmcbride/node:dubnium-stretch-dev,krmcbride/node:dubnium-dev,krmcbride/node:10-dev'
 
-  php_5.6apache-jessie-base:
-    <<: *defaults
-    environment:
-      context: ./build/php/5.6apache-jessie-base
-      image: 'krmcbride/php:5.6apache-jessie-base'
-      tags: 'krmcbride/php:5.6apache-jessie,krmcbride/php:5.6apache'
-  php_5.6apache-jessie-dev:
-    <<: *defaults
-    environment:
-      context: ./build/php/5.6apache-jessie-dev
-      image: 'krmcbride/php:5.6apache-jessie-dev'
-
-  php_7.2apache-stretch-base:
-    <<: *defaults
-    environment:
-      context: ./build/php/7.2apache-stretch-base
-      image: 'krmcbride/php:7.2apache-stretch-base'
-      tags: 'krmcbride/php:7.2apache-stretch,krmcbride/php:7.2apache'
-  php_7.2apache-stretch-dev:
-    <<: *defaults
-    environment:
-      context: ./build/php/7.2apache-stretch-dev
-      image: 'krmcbride/php:7.2apache-stretch-dev'
-
 
 workflows:
   version: 2
@@ -145,65 +96,30 @@ workflows:
     jobs:
       - make
 
-      - debian_jessie-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - make
-      - debian_jessie-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_jessie-base
       - debian_stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - make
+          - make
       - debian_stretch-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_stretch-base
+          - debian_stretch-base
 
       - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_stretch-base
+          - make
       - java_8-stretch-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-            - debian_stretch-dev
-
-      - node_8-stretch-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_stretch-base
-      - node_8-stretch-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_stretch-dev
+          - java_8-stretch-base
 
       - node_10-stretch-base:
           filters: { branches: { only: [ master ] } }
           requires:
-          - debian_stretch-base
+          - make
       - node_10-stretch-dev:
           filters: { branches: { only: [ master ] } }
           requires:
-          - debian_stretch-dev
-
-      - php_5.6apache-jessie-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_jessie-base
-      - php_5.6apache-jessie-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_jessie-dev
-
-      - php_7.2apache-stretch-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_stretch-base
-      - php_7.2apache-stretch-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-            - debian_stretch-dev
+          - node_10-stretch-base
 

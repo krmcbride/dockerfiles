@@ -1,8 +1,9 @@
-FROM krmcbride/debian:9
+FROM openjdk:8u232-stretch
+
+{{ .Env.mixin_stretch_base }}
 
 # Required by latest upstream
 RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-{{ .Env.upstream }}

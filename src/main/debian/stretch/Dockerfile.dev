@@ -1,0 +1,3 @@
+FROM krmcbride/debian:stretch-base
+
+{{ .Env.mixin_stretch_dev }}

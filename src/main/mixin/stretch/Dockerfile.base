@@ -1,4 +1,6 @@
-FROM debian:{{ .Env.version }}
+##
+## BEGIN krmcbride base mixin
+##
 
 RUN apt-get update \
     && apt-get dist-upgrade -y --no-install-recommends -o Dpkg::Options::="--force-confold" \
@@ -39,3 +41,7 @@ ENV TZ="America/Los_Angeles" \
 
 WORKDIR /root
 CMD ["/bin/bash"]
+
+##
+## END krmcbride base mixin
+##

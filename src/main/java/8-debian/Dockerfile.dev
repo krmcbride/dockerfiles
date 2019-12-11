@@ -1,8 +1,0 @@
-FROM krmcbride/debian:9-dev
-
-# Required by latest upstream
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        wget \
-    && rm -rf /var/lib/apt/lists/*
-
-{{ .Env.upstream }}

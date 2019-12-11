@@ -1,4 +1,6 @@
-FROM krmcbride/debian:{{ .Env.version }}
+##
+## BEGIN krmcbride dev mixin
+##
 
 RUN apt-get update \
   && apt-get remove -y --purge \
@@ -76,3 +78,7 @@ COPY gitconfig /etc/
 COPY dotfiles/.vimrc dotfiles/.zshrc /root/
 
 CMD ["/bin/zsh"]
+
+##
+## END krmcbride dev mixin
+##
