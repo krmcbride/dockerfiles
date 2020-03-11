@@ -3,7 +3,7 @@ SHELL = bash
 DEV_MIXIN_DOCKER_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev | grep 'DEV_MIXIN_DOCKER_VERSION='); version=$${version//DEV_MIXIN_DOCKER_VERSION=/}; echo $${version//[\" \\]/})
 DEV_MIXIN_DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
 NODE_10_STRETCH_VERSION=$$(version=$$(cat src/main/node/10-stretch/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-stretch/})
-NODE_12_BUSTER_VERSION=$$(version=$$(cat src/main/node/10-buster/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-buster/})
+NODE_12_BUSTER_VERSION=$$(version=$$(cat src/main/node/12-buster/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-buster/})
 JAVA_8_STRETCH_VERSION=$$(version=$$(cat src/main/java/8-stretch/Dockerfile.base | grep 'FROM openjdk:'); version=$${version//FROM openjdk:/}; echo $${version//-stretch/})
 
 .PHONY: all
