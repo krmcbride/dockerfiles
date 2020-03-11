@@ -1,0 +1,12 @@
+FROM node:12.16.1-buster
+
+{{ .Env.mixin_buster_base }}
+
+# Git and ssh are required by package managers
+# Python 2.7 is required by node-gyp
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        openssh-client \
+        git \
+        python \
+    && rm -rf /var/lib/apt/lists/*
+
