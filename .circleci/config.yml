@@ -55,13 +55,25 @@ jobs:
     environment:
       context: ./build/debian/stretch-base
       image: 'krmcbride/debian:stretch-base'
-      tags: 'krmcbride/debian:9,krmcbride/debian:stretch,krmcbride/debian:latest'
+      tags: 'krmcbride/debian:9,krmcbride/debian:stretch'
   debian_stretch-dev:
     <<: *defaults
     environment:
       context: ./build/debian/stretch-dev
       image: 'krmcbride/debian:stretch-dev'
       tags: 'krmcbride/debian:9-dev'
+  debian_buster-base:
+    <<: *defaults
+    environment:
+      context: ./build/debian/buster-base
+      image: 'krmcbride/debian:buster-base'
+      tags: 'krmcbride/debian:10,krmcbride/debian:buster,krmcbride/debian:latest'
+  debian_buster-dev:
+    <<: *defaults
+    environment:
+      context: ./build/debian/buster-dev
+      image: 'krmcbride/debian:buster-dev'
+      tags: 'krmcbride/debian:10-dev'
 
   java_8-stretch-base:
     <<: *defaults
@@ -88,6 +100,18 @@ jobs:
       context: ./build/node/10-stretch-dev
       image: 'krmcbride/node:10-stretch-dev'
       tags: 'krmcbride/node:dubnium-stretch-dev,krmcbride/node:dubnium-dev,krmcbride/node:10-dev'
+  node_12-buster-base:
+    <<: *defaults
+    environment:
+      context: ./build/node/12-buster-base
+      image: 'krmcbride/node:12-buster-base'
+      tags: 'krmcbride/node:erbium-buster-base,krmcbride/node:erbium-buster,krmcbride/node:erbium,krmcbride/node:12-buster,krmcbride/node:12'
+  node_12-buster-dev:
+    <<: *defaults
+    environment:
+      context: ./build/node/12-buster-dev
+      image: 'krmcbride/node:12-buster-dev'
+      tags: 'krmcbride/node:erbium-buster-dev,krmcbride/node:erbium-dev,krmcbride/node:12-dev'
 
 
 workflows:
@@ -104,6 +128,14 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - debian_stretch-base
+      - debian_buster-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - debian_buster-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - debian_buster-base
 
       - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
@@ -122,4 +154,12 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - node_10-stretch-base
+      - node_12-buster-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - node_12-buster-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - node_12-buster-base
 
