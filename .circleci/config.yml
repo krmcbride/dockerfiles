@@ -92,7 +92,7 @@ jobs:
     environment:
       context: ./build/corretto/8-amazonlinux2-base
       image: 'krmcbride/corretto:8-amazonlinux2-base'
-      tags: 'krmcbride/corretto:8-base,corretto:8'
+      tags: 'krmcbride/corretto:8-base,krmcbride/corretto:8'
 
   node_10-stretch-base:
     <<: *defaults
