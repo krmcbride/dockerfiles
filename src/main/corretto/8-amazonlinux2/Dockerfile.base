@@ -1,0 +1,4 @@
+FROM amazoncorretto:8u252
+
+{{ .Env.mixin_amazonlinux2_base }}
+
