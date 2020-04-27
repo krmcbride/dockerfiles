@@ -87,6 +87,12 @@ jobs:
       context: ./build/java/8-stretch-dev
       image: 'krmcbride/java:8-stretch-dev'
       tags: 'krmcbride/java:8-dev'
+  corretto_8-amazonlinux2-base:
+    <<: *defaults
+    environment:
+      context: ./build/corretto/8-amazonlinux2-base
+      image: 'krmcbride/corretto:8-amazonlinux2-base'
+      tags: 'krmcbride/corretto:8-base,corretto:8'
 
   node_10-stretch-base:
     <<: *defaults
@@ -145,6 +151,10 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - java_8-stretch-base
+      - corretto_8-amazonlinux2-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
 
       - node_10-stretch-base:
           filters: { branches: { only: [ master ] } }
