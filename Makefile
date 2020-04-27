@@ -5,7 +5,7 @@ DEV_MIXIN_DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev
 NODE_10_STRETCH_VERSION=$$(version=$$(cat src/main/node/10-stretch/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-stretch/})
 NODE_12_BUSTER_VERSION=$$(version=$$(cat src/main/node/12-buster/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-buster/})
 JAVA_8_STRETCH_VERSION=$$(version=$$(cat src/main/java/8-stretch/Dockerfile.base | grep 'FROM openjdk:'); version=$${version//FROM openjdk:/}; echo $${version//-stretch/})
-CORRETTO_8_VERSION=$$(version=$$(cat src/main/corretto/8-amazonlinux2/Dockerfile.base | grep 'FROM corretto:'); version=$${version//FROM corretto:/}; echo $${version})
+CORRETTO_8_VERSION=$$(version=$$(cat src/main/corretto/8-amazonlinux2/Dockerfile.base | grep 'FROM amazoncorretto:'); version=$${version//FROM amazoncorretto:/}; echo $${version})
 
 .PHONY: all
 all: \
