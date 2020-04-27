@@ -5,6 +5,7 @@ DEV_MIXIN_DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev
 NODE_10_STRETCH_VERSION=$$(version=$$(cat src/main/node/10-stretch/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-stretch/})
 NODE_12_BUSTER_VERSION=$$(version=$$(cat src/main/node/12-buster/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-buster/})
 JAVA_8_STRETCH_VERSION=$$(version=$$(cat src/main/java/8-stretch/Dockerfile.base | grep 'FROM openjdk:'); version=$${version//FROM openjdk:/}; echo $${version//-stretch/})
+CORRETTO_8_VERSION=$$(version=$$(cat src/main/corretto/8-amazonlinux2/Dockerfile.base | grep 'FROM corretto:'); version=$${version//FROM corretto:/}; echo $${version})
 
 .PHONY: all
 all: \
@@ -71,7 +72,8 @@ build/debian/buster-dev/Dockerfile: src/main/debian/buster/Dockerfile.dev
 .PHONY: java
 java: \
 	build/java/8-stretch-base/Dockerfile \
-	build/java/8-stretch-dev/Dockerfile
+	build/java/8-stretch-dev/Dockerfile \
+	build/corretto/8-amazonlinux2-base/Dockerfile
 
 build/java/8-stretch-base/Dockerfile: src/main/java/8-stretch/Dockerfile.base
 	@echo "generating $@ from $<"
@@ -88,6 +90,15 @@ build/java/8-stretch-dev/Dockerfile: src/main/java/8-stretch/Dockerfile.dev
 	    export mixin_stretch_dev=$$(cat src/main/mixin/stretch/Dockerfile.dev); \
 	    dockerize -template $<:$@; \
 	    cp -R src/resources/mixin/* $(@D)
+
+build/corretto/8-amazonlinux2-base/Dockerfile: src/main/corretto/8-amazonlinux2/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    export mixin_amazonlinux2_base=$$(cat src/main/mixin/amazonlinux2/Dockerfile.base); \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/mixin/* $(@D)
+
 
 ##
 ## node
@@ -233,7 +244,8 @@ test_node_12-buster-dev:
 .PHONY: test_java
 test_java: \
 	test_java_8-stretch-base \
-	test_java_8-stretch-dev
+	test_java_8-stretch-dev \
+	test_corretto_8-amazonlinux2-base
 
 .PHONY: test_java_8-stretch-base
 test_java_8-stretch-base:
@@ -257,6 +269,17 @@ test_java_8-stretch-dev:
 	echo expecting $(JAVA_8_STRETCH_VERSION); \
 	echo got $${version}; \
 	echo $${version} | grep $(JAVA_8_STRETCH_VERSION)
+
+.PHONY: test_corretto_8-amazonlinux2-base
+test_corretto_8-amazonlinux2-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/corretto:8-amazonlinux2-base cat /etc/system-release | grep 'Amazon Linux release 2 (Karoo)'
+	@version=$$(docker run -it --rm \
+		krmcbride/corretto:8-amazonlinux2-base \
+		bash -c 'java -version 2>&1 | grep Environment | grep Corretto | sed '\''s/1\.8\.0_/8u/'\'''); \
+	echo expecting $(CORRETTO_8_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep $(CORRETTO_8_VERSION)
 
 
 ##
