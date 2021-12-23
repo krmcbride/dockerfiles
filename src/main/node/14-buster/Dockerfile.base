@@ -1,0 +1,12 @@
+FROM node:14.18.2-buster
+
+{{ .Env.mixin_buster_base }}
+
+# Git and ssh are required by package managers
+# python >3.6 is required by node-gyp, this should install 3.7
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        openssh-client \
+        git \
+        python3 \
+    && rm -rf /var/lib/apt/lists/*
+
