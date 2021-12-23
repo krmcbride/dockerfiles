@@ -1,0 +1,3 @@
+FROM debian:bullseye
+
+{{ .Env.mixin_bullseye_base }}
