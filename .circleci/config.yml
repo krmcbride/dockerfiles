@@ -2,14 +2,11 @@ version: 2
 
 
 defaults: &defaults
-  docker:
-    - image: 'krmcbride/docker:18.03-ci'
-  working_directory: /usr/src/app
+  machine:
+    image: ubuntu-2004:202010-01
   steps:
-    - setup_remote_docker:
-        version: 17.09.0-ce
     - attach_workspace:
-        at: /usr/src/app
+        at: ./
     - run:
         name: Login
         command: docker login -u ${docker_username} -p ${docker_password}
@@ -40,15 +37,26 @@ defaults: &defaults
 
 jobs:
   make:
-    docker:
-      - image: 'krmcbride/docker@sha256:294d2a840e2dcb7bc377bc0169af759fbd30f5f11ad5d12dc499b0f1de88d849'
-    working_directory: /usr/src/app
+    machine:
+      image: ubuntu-2004:202010-01
     steps:
       - checkout
+      - run:
+          name: Install dockerize
+          environment:
+            DOCKERIZE_VERSION: v0.6.1
+          command: |
+            set -e
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            tar -C ~/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+            rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
       - run: make
       - persist_to_workspace:
-          root: /usr/src/app
-          paths: .
+          root: ./
+          paths:
+          - src/*
+          - build/*
+          - Makefile
 
   debian_stretch-base:
     <<: *defaults
