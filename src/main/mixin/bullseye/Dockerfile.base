@@ -1,0 +1,47 @@
+##
+## BEGIN krmcbride base mixin
+##
+
+RUN apt-get update \
+    && apt-get dist-upgrade -y --no-install-recommends -o Dpkg::Options::="--force-confold" \
+    && apt-get install -y --no-install-recommends \
+        procps \
+        psmisc \
+        net-tools \
+        apt-utils \
+        locales \
+        vim.tiny \
+        ca-certificates \
+        curl \
+        gnupg \
+        dirmngr \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "America/Los_Angeles" > /etc/timezone \
+    && rm /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US \
+    && update-locale LANG=en_US.UTF-8 LC_CTYPE=en_US.UTF-8 \
+    && mkdir -p /usr/src/app \
+    && rm -rf /tmp/* /var/tmp/* \
+    && DOCKERIZE_VERSION=v0.6.1; curl -fL -o dockerize.tar.gz "https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz" \
+    && tar -C /usr/local/bin/ -xzvf dockerize.tar.gz \
+    && rm dockerize.tar.gz \
+    && dockerize --version
+
+COPY bash-it/ /usr/local/bash-it/
+COPY dotfiles/.bashrc /root/
+
+ENV TZ="America/Los_Angeles" \
+    DEBIAN_FRONTEND="teletype" \
+    LANG="en_US.UTF-8" \
+    LANGUAGE="en_US:en" \
+    LC_ALL="en_US.UTF-8"
+
+WORKDIR /root
+CMD ["/bin/bash"]
+
+##
+## END krmcbride base mixin
+##
