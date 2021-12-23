@@ -67,13 +67,25 @@ jobs:
     environment:
       context: ./build/debian/buster-base
       image: 'krmcbride/debian:buster-base'
-      tags: 'krmcbride/debian:10,krmcbride/debian:buster,krmcbride/debian:latest'
+      tags: 'krmcbride/debian:10,krmcbride/debian:buster,krmcbride/debian'
   debian_buster-dev:
     <<: *defaults
     environment:
       context: ./build/debian/buster-dev
       image: 'krmcbride/debian:buster-dev'
       tags: 'krmcbride/debian:10-dev'
+  debian_bullseye-base:
+    <<: *defaults
+    environment:
+      context: ./build/debian/bullseye-base
+      image: 'krmcbride/debian:bullseye-base'
+      tags: 'krmcbride/debian:11,krmcbride/debian:bullseye,krmcbride/debian:latest'
+  debian_bullseye-dev:
+    <<: *defaults
+    environment:
+      context: ./build/debian/bullseye-dev
+      image: 'krmcbride/debian:bullseye-dev'
+      tags: 'krmcbride/debian:11-dev'
 
   java_8-stretch-base:
     <<: *defaults
@@ -94,18 +106,6 @@ jobs:
       image: 'krmcbride/corretto:8-amazonlinux2-base'
       tags: 'krmcbride/corretto:8-base,krmcbride/corretto:8'
 
-  node_10-stretch-base:
-    <<: *defaults
-    environment:
-      context: ./build/node/10-stretch-base
-      image: 'krmcbride/node:10-stretch-base'
-      tags: 'krmcbride/node:dubnium-stretch-base,krmcbride/node:dubnium-stretch,krmcbride/node:dubnium,krmcbride/node:10-stretch,krmcbride/node:10'
-  node_10-stretch-dev:
-    <<: *defaults
-    environment:
-      context: ./build/node/10-stretch-dev
-      image: 'krmcbride/node:10-stretch-dev'
-      tags: 'krmcbride/node:dubnium-stretch-dev,krmcbride/node:dubnium-dev,krmcbride/node:10-dev'
   node_12-buster-base:
     <<: *defaults
     environment:
@@ -118,6 +118,30 @@ jobs:
       context: ./build/node/12-buster-dev
       image: 'krmcbride/node:12-buster-dev'
       tags: 'krmcbride/node:erbium-buster-dev,krmcbride/node:erbium-dev,krmcbride/node:12-dev'
+  node_14-buster-base:
+    <<: *defaults
+    environment:
+      context: ./build/node/14-buster-base
+      image: 'krmcbride/node:14-buster-base'
+      tags: 'krmcbride/node:fermium-buster-base,krmcbride/node:fermium-buster,krmcbride/node:fermium,krmcbride/node:14-buster,krmcbride/node:14'
+  node_14-buster-dev:
+    <<: *defaults
+    environment:
+      context: ./build/node/14-buster-dev
+      image: 'krmcbride/node:14-buster-dev'
+      tags: 'krmcbride/node:fermium-buster-dev,krmcbride/node:fermium-dev,krmcbride/node:14-dev'
+  node_16-bullseye-base:
+    <<: *defaults
+    environment:
+      context: ./build/node/16-bullseye-base
+      image: 'krmcbride/node:16-bullseye-base'
+      tags: 'krmcbride/node:gallium-bullseye-base,krmcbride/node:gallium-bullseye,krmcbride/node:gallium,krmcbride/node:16-bullseye,krmcbride/node:16'
+  node_16-bullseye-dev:
+    <<: *defaults
+    environment:
+      context: ./build/node/16-bullseye-dev
+      image: 'krmcbride/node:16-bullseye-dev'
+      tags: 'krmcbride/node:gallium-bullseye-dev,krmcbride/node:gallium-dev,krmcbride/node:16-dev'
 
 
 workflows:
@@ -142,6 +166,14 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - debian_buster-base
+      - debian_bullseye-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - debian_bullseye-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - debian_bullseye-base
 
       - java_8-stretch-base:
           filters: { branches: { only: [ master ] } }
@@ -156,14 +188,6 @@ workflows:
           requires:
           - make
 
-      - node_10-stretch-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - make
-      - node_10-stretch-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - node_10-stretch-base
       - node_12-buster-base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -172,4 +196,20 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - node_12-buster-base
+      - node_14-buster-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - node_14-buster-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - node_14-buster-base
+      - node_16-bullseye-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - node_16-bullseye-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - node_16-bullseye-base
 
