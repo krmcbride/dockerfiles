@@ -12,7 +12,7 @@ RUN apt-get update \
     git \
     openssh-client \
     vim \
-    ctags \
+    exuberant-ctags \
     zsh \
     bc \
     rsync \
