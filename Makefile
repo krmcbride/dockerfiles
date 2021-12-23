@@ -242,7 +242,7 @@ test_debian_bullseye-base:
 test_debian_bullseye-dev:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/debian:bullseye-dev cat /etc/issue | grep 'Debian GNU/Linux 11'
-	@docker run -it --rm krmcbride/debian:bullseye-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/debian:bullseye-dev ls /usr/local/oh-my-zsh
 
 
 .PHONY: test_node
@@ -305,7 +305,7 @@ test_node_16-bullseye-base:
 test_node_16-bullseye-dev:
 	@echo ===== running $@
 	@docker run -it --rm krmcbride/node:16-bullseye-dev cat /etc/issue | grep 'Debian GNU/Linux 11'
-	@docker run -it --rm krmcbride/node:16-bullseye-dev ls /usr/local/oh-my-zsh > /dev/null
+	@docker run -it --rm krmcbride/node:16-bullseye-dev ls /usr/local/oh-my-zsh
 	@version=$$(docker run -it --rm krmcbride/node:16-bullseye-dev node --version); \
 	echo expecting $(NODE_16_BULLSEYE_VERSION); \
 	echo got $${version}; \
