@@ -1,3 +1,3 @@
-FROM krmcbride/node:14-bullseye-base
+FROM krmcbride/node:16-bullseye-base
 
 {{ .Env.mixin_bullseye_dev }}
