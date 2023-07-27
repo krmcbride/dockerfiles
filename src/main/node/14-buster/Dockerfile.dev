@@ -1,3 +1,0 @@
-FROM krmcbride/node:14-buster-base
-
-{{ .Env.mixin_buster_dev }}

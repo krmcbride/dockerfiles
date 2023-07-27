@@ -1,12 +1,12 @@
-FROM node:12.19.0-buster
+FROM node:18.17.0-bullseye
 
-{{ .Env.mixin_buster_base }}
+{{ .Env.mixin_bullseye_base }}
 
 # Git and ssh are required by package managers
-# Python 2.7 is required by node-gyp
+# python >3.6 is required by node-gyp, this should install 3.9
 RUN apt-get update && apt-get install -y --no-install-recommends \
         openssh-client \
         git \
-        python \
+        python3 \
     && rm -rf /var/lib/apt/lists/*
 
