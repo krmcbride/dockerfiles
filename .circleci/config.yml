@@ -71,12 +71,18 @@ jobs:
       image: 'krmcbride/debian:bullseye-dev'
       tags: 'krmcbride/debian:11-dev'
 
-  corretto_8-amazonlinux2-base:
+  corretto_11-amazonlinux2-base:
     <<: *defaults
     environment:
-      context: ./build/corretto/8-amazonlinux2-base
-      image: 'krmcbride/corretto:8-amazonlinux2-base'
-      tags: 'krmcbride/corretto:8-base,krmcbride/corretto:8'
+      context: ./build/corretto/11-amazonlinux2-base
+      image: 'krmcbride/corretto:11-amazonlinux2-base'
+      tags: 'krmcbride/corretto:11-base,krmcbride/corretto:11'
+  corretto_17-amazonlinux2-base:
+    <<: *defaults
+    environment:
+      context: ./build/corretto/17-amazonlinux2-base
+      image: 'krmcbride/corretto:17-amazonlinux2-base'
+      tags: 'krmcbride/corretto:17-base,krmcbride/corretto:17'
 
   node_16-bullseye-base:
     <<: *defaults
@@ -119,7 +125,11 @@ workflows:
           requires:
           - debian_bullseye-base
 
-      - corretto_8-amazonlinux2-base:
+      - corretto_11-amazonlinux2-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - corretto_17-amazonlinux2-base:
           filters: { branches: { only: [ master ] } }
           requires:
           - make

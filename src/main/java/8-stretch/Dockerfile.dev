@@ -1,3 +1,0 @@
-FROM krmcbride/java:8-stretch-base
-
-{{ .Env.mixin_stretch_dev }}

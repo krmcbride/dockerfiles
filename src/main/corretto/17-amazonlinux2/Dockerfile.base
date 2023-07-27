@@ -1,0 +1,4 @@
+FROM amazoncorretto:17.0.8
+
+{{ .Env.mixin_amazonlinux2_base }}
+

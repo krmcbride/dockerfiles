@@ -4,7 +4,8 @@ DEV_MIXIN_DOCKER_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev | grep 
 DEV_MIXIN_DOCKER_COMPOSE_VERSION=$$(version=$$(cat src/main/mixin/Dockerfile.dev | grep 'DOCKER_COMPOSE_VERSION='); version=$${version//DOCKER_COMPOSE_VERSION=/}; echo $${version//[\" \\]/})
 NODE_16_BULLSEYE_VERSION=$$(version=$$(cat src/main/node/16-bullseye/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-bullseye/})
 NODE_18_BULLSEYE_VERSION=$$(version=$$(cat src/main/node/18-bullseye/Dockerfile.base | grep 'FROM node:'); version=$${version//FROM node:/}; echo $${version//-bullseye/})
-CORRETTO_8_VERSION=$$(version=$$(cat src/main/corretto/8-amazonlinux2/Dockerfile.base | grep 'FROM amazoncorretto:'); version=$${version//FROM amazoncorretto:/}; echo $${version})
+CORRETTO_11_VERSION=$$(version=$$(cat src/main/corretto/11-amazonlinux2/Dockerfile.base | grep 'FROM amazoncorretto:'); version=$${version//FROM amazoncorretto:/}; echo $${version})
+CORRETTO_17_VERSION=$$(version=$$(cat src/main/corretto/17-amazonlinux2/Dockerfile.base | grep 'FROM amazoncorretto:'); version=$${version//FROM amazoncorretto:/}; echo $${version})
 
 .PHONY: all
 all: \
@@ -52,9 +53,18 @@ build/debian/bullseye-dev/Dockerfile: src/main/debian/bullseye/Dockerfile.dev
 ##
 .PHONY: java
 java: \
-	build/corretto/8-amazonlinux2-base/Dockerfile
+	build/corretto/11-amazonlinux2-base/Dockerfile \
+	build/corretto/17-amazonlinux2-base/Dockerfile
 
-build/corretto/8-amazonlinux2-base/Dockerfile: src/main/corretto/8-amazonlinux2/Dockerfile.base
+build/corretto/11-amazonlinux2-base/Dockerfile: src/main/corretto/11-amazonlinux2/Dockerfile.base
+	@echo "generating $@ from $<"
+	@[ -d $(@D) ] || mkdir -p $(@D)
+	@\
+	    export mixin_amazonlinux2_base=$$(cat src/main/mixin/amazonlinux2/Dockerfile.base); \
+	    dockerize -template $<:$@; \
+	    cp -R src/resources/mixin/* $(@D)
+
+build/corretto/17-amazonlinux2-base/Dockerfile: src/main/corretto/17-amazonlinux2/Dockerfile.base
 	@echo "generating $@ from $<"
 	@[ -d $(@D) ] || mkdir -p $(@D)
 	@\
@@ -193,18 +203,30 @@ test_node_18-bullseye-dev:
 
 .PHONY: test_java
 test_java: \
+	test_corretto_8-amazonlinux2-base \
 	test_corretto_8-amazonlinux2-base
 
-.PHONY: test_corretto_8-amazonlinux2-base
-test_corretto_8-amazonlinux2-base:
+.PHONY: test_corretto_11-amazonlinux2-base
+test_corretto_11-amazonlinux2-base:
 	@echo ===== running $@
-	@docker run -it --rm krmcbride/corretto:8-amazonlinux2-base cat /etc/system-release | grep 'Amazon Linux release 2 (Karoo)'
+	@docker run -it --rm krmcbride/corretto:11-amazonlinux2-base cat /etc/system-release | grep 'Amazon Linux release 2 (Karoo)'
 	@version=$$(docker run -it --rm \
-		krmcbride/corretto:8-amazonlinux2-base \
-		bash -c 'java -version 2>&1 | grep Environment | grep Corretto | sed '\''s/1\.8\.0_/8u/'\'''); \
-	echo expecting $(CORRETTO_8_VERSION); \
+		krmcbride/corretto:11-amazonlinux2-base \
+		bash -c 'java -version 2>&1 | grep Environment | grep Corretto'); \
+	echo expecting $(CORRETTO_11_VERSION); \
 	echo got $${version}; \
-	echo $${version} | grep $(CORRETTO_8_VERSION)
+	echo $${version} | grep "Corretto-$(CORRETTO_11_VERSION)"
+
+.PHONY: test_corretto_17-amazonlinux2-base
+test_corretto_17-amazonlinux2-base:
+	@echo ===== running $@
+	@docker run -it --rm krmcbride/corretto:17-amazonlinux2-base cat /etc/system-release | grep 'Amazon Linux release 2 (Karoo)'
+	@version=$$(docker run -it --rm \
+		krmcbride/corretto:17-amazonlinux2-base \
+		bash -c 'java -version 2>&1 | grep Environment | grep Corretto'); \
+	echo expecting $(CORRETTO_17_VERSION); \
+	echo got $${version}; \
+	echo $${version} | grep "Corretto-$(CORRETTO_17_VERSION)"
 
 
 ##
