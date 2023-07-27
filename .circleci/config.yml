@@ -3,7 +3,7 @@ version: 2
 
 defaults: &defaults
   machine:
-    image: ubuntu-2004:202010-01
+    image: ubuntu-2204:2023.07.2
   steps:
     - attach_workspace:
         at: ./
@@ -114,30 +114,6 @@ jobs:
       image: 'krmcbride/corretto:8-amazonlinux2-base'
       tags: 'krmcbride/corretto:8-base,krmcbride/corretto:8'
 
-  node_12-buster-base:
-    <<: *defaults
-    environment:
-      context: ./build/node/12-buster-base
-      image: 'krmcbride/node:12-buster-base'
-      tags: 'krmcbride/node:erbium-buster-base,krmcbride/node:erbium-buster,krmcbride/node:erbium,krmcbride/node:12-buster,krmcbride/node:12'
-  node_12-buster-dev:
-    <<: *defaults
-    environment:
-      context: ./build/node/12-buster-dev
-      image: 'krmcbride/node:12-buster-dev'
-      tags: 'krmcbride/node:erbium-buster-dev,krmcbride/node:erbium-dev,krmcbride/node:12-dev'
-  node_14-buster-base:
-    <<: *defaults
-    environment:
-      context: ./build/node/14-buster-base
-      image: 'krmcbride/node:14-buster-base'
-      tags: 'krmcbride/node:fermium-buster-base,krmcbride/node:fermium-buster,krmcbride/node:fermium,krmcbride/node:14-buster,krmcbride/node:14'
-  node_14-buster-dev:
-    <<: *defaults
-    environment:
-      context: ./build/node/14-buster-dev
-      image: 'krmcbride/node:14-buster-dev'
-      tags: 'krmcbride/node:fermium-buster-dev,krmcbride/node:fermium-dev,krmcbride/node:14-dev'
   node_16-bullseye-base:
     <<: *defaults
     environment:
@@ -150,6 +126,18 @@ jobs:
       context: ./build/node/16-bullseye-dev
       image: 'krmcbride/node:16-bullseye-dev'
       tags: 'krmcbride/node:gallium-bullseye-dev,krmcbride/node:gallium-dev,krmcbride/node:16-dev'
+  node_18-bullseye-base:
+    <<: *defaults
+    environment:
+      context: ./build/node/18-bullseye-base
+      image: 'krmcbride/node:18-bullseye-base'
+      tags: 'krmcbride/node:gallium-bullseye-base,krmcbride/node:gallium-bullseye,krmcbride/node:gallium,krmcbride/node:18-bullseye,krmcbride/node:18'
+  node_18-bullseye-dev:
+    <<: *defaults
+    environment:
+      context: ./build/node/18-bullseye-dev
+      image: 'krmcbride/node:18-bullseye-dev'
+      tags: 'krmcbride/node:gallium-bullseye-dev,krmcbride/node:gallium-dev,krmcbride/node:18-dev'
 
 
 workflows:
@@ -196,22 +184,6 @@ workflows:
           requires:
           - make
 
-      - node_12-buster-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - make
-      - node_12-buster-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - node_12-buster-base
-      - node_14-buster-base:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - make
-      - node_14-buster-dev:
-          filters: { branches: { only: [ master ] } }
-          requires:
-          - node_14-buster-base
       - node_16-bullseye-base:
           filters: { branches: { only: [ master ] } }
           requires:
@@ -220,4 +192,12 @@ workflows:
           filters: { branches: { only: [ master ] } }
           requires:
           - node_16-bullseye-base
+      - node_18-buster-base:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - make
+      - node_18-buster-dev:
+          filters: { branches: { only: [ master ] } }
+          requires:
+          - node_18-bullseye-base
 
