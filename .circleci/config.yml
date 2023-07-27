@@ -9,7 +9,7 @@ defaults: &defaults
         at: ./
     - run:
         name: Login
-        command: docker login -u ${docker_username} -p ${docker_password}
+        command: echo "${docker_password}" | docker login -u ${docker_username} --password-stdin
     - run:
         name: Pull
         command: docker pull $image || true
