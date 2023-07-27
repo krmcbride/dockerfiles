@@ -1,3 +1,0 @@
-FROM debian:stretch
-
-{{ .Env.mixin_stretch_base }}
